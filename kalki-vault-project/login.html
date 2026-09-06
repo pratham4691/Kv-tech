@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalki Vault — Cyber Access Gateway & Member Portals</title>
+  <meta name="theme-color" content="#030712">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            vault: {
+              950: '#030712', 900: '#070d1d', 850: '#0b1329', 800: '#111e3f',
+              700: '#1e293b', 600: '#334155', cyan: '#00f0ff', emerald: '#10b981',
+              gold: '#f59e0b', crimson: '#ff0055', purple: '#a855f7'
+            }
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { background-color: #030712; color: #f1f5f9; font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00f0ff66; }
+
+    @keyframes cyberPulse {
+      0%, 100% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.2); }
+      50% { box-shadow: 0 0 50px rgba(0, 240, 255, 0.45); }
+    }
+    .cyber-portal-card { animation: cyberPulse 4s ease-in-out infinite; }
+  </style>
+</head>
+<body class="min-h-screen bg-vault-950 text-slate-100 flex flex-col justify-between selection:bg-vault-cyan/30 selection:text-vault-cyan relative overflow-x-hidden">
+
+  <!-- BACKGROUND CANVAS WITH REACTIVE PARTICLES -->
+  <canvas id="login-bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-60"></canvas>
+
+  <!-- TOP BAR -->
+  <header class="relative z-10 w-full bg-vault-900/80 border-b border-white/10 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="assets/kv_logo.jpg" alt="KV Shield" class="w-10 h-10 rounded-xl object-cover border border-vault-cyan/40 shadow-lg">
+      <div>
+        <span class="font-display font-bold text-lg tracking-wider text-slate-100 block">
+          KALKI <span class="text-vault-cyan">VAULT</span>
+        </span>
+        <span class="text-[9px] font-mono tracking-widest text-slate-400 uppercase block -mt-1">
+          Cyber Access Gateway
+        </span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-4">
+      <button id="beats-toggle" onclick="toggleCyberBeats()" title="Toggle Background Cyber Beats Synthesizer" class="px-3.5 py-1.5 rounded-xl bg-vault-900 border border-vault-cyan/40 hover:border-vault-cyan text-xs font-mono text-vault-cyan flex items-center gap-2 transition-all shadow-md">
+        <i data-lucide="music" id="beats-icon" class="w-4 h-4 text-slate-400"></i>
+        <span id="beats-text">Cyber Beats: Off</span>
+      </button>
+      <a href="index.html" class="text-xs font-mono text-slate-400 hover:text-vault-cyan flex items-center gap-1.5 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Return to Platform</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN LOGIN & REGISTRATION CARD -->
+  <main class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 my-6">
+    <div class="max-w-xl w-full p-6 sm:p-8 rounded-3xl bg-vault-900/90 border border-vault-cyan/40 backdrop-blur-2xl shadow-2xl cyber-portal-card">
+      
+      <!-- 3 AUDIENCE SELECTOR TABS -->
+      <div class="grid grid-cols-3 gap-2 mb-6">
+        <button onclick="setAudience('student')" id="aud-btn-student" class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 bg-vault-850 border-sky-400 text-sky-400 shadow-md">
+          <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+          <span class="text-[11px] font-mono font-bold">STUDENT</span>
+        </button>
+        <button onclick="setAudience('researcher')" id="aud-btn-researcher" class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 bg-vault-950 border-white/10 text-slate-400">
+          <i data-lucide="microscope" class="w-5 h-5"></i>
+          <span class="text-[11px] font-mono font-bold">RESEARCHER</span>
+        </button>
+        <button onclick="setAudience('company')" id="aud-btn-company" class="p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 bg-vault-950 border-white/10 text-slate-400">
+          <i data-lucide="building-2" class="w-5 h-5"></i>
+          <span class="text-[11px] font-mono font-bold">COMPANY</span>
+        </button>
+      </div>
+
+      <!-- Portal Header Details -->
+      <div class="mb-6 pb-4 border-b border-white/10 flex items-center justify-between">
+        <div>
+          <h2 id="portal-title" class="text-xl sm:text-2xl font-display font-bold text-slate-100">Student Academy Gateway</h2>
+          <p id="portal-desc" class="text-xs font-mono text-sky-400">Access training labs & session resources</p>
+        </div>
+        
+        <!-- Toggle Mode (Login vs Register) -->
+        <div class="inline-flex p-1 rounded-xl bg-vault-950 border border-white/10 text-xs font-mono">
+          <button onclick="setAuthMode('login')" id="mode-btn-login" class="px-3 py-1 rounded-lg bg-vault-850 text-slate-100 font-bold">Sign In</button>
+          <button onclick="setAuthMode('register')" id="mode-btn-register" class="px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200">Register</button>
+        </div>
+      </div>
+
+      <!-- Quick Demo Credentials Helper -->
+      <div class="mb-4 p-2.5 rounded-xl bg-vault-950 border border-vault-cyan/20 flex items-center justify-between text-xs font-mono">
+        <span class="text-slate-400">Testing this portal?</span>
+        <button type="button" onclick="fillDemoCredentials()" class="text-vault-cyan hover:underline font-bold flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          <span>Auto-fill Demo Credentials</span>
+        </button>
+      </div>
+
+      <!-- AUTH FORM -->
+      <form onsubmit="handlePortalAuth(event)" class="space-y-4 font-mono text-xs">
+        
+        <!-- Register Extra Name Field -->
+        <div id="field-name-group" class="hidden">
+          <label class="block text-slate-300 mb-1">Full Legal / Academic Name</label>
+          <input type="text" id="auth-name-input" placeholder="Aarav Sharma" class="w-full px-4 py-2.5 rounded-xl bg-vault-950 border border-white/10 focus:border-vault-cyan focus:outline-none text-slate-100 placeholder:text-slate-600">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1" id="label-email">Registered Email Address</label>
+          <input type="email" id="auth-email-input" required placeholder="name@institution.edu" class="w-full px-4 py-2.5 rounded-xl bg-vault-950 border border-white/10 focus:border-vault-cyan focus:outline-none text-slate-100 placeholder:text-slate-600">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 mb-1">Security Passcode / Password</label>
+          <input type="password" id="auth-pass-input" required placeholder="••••••••••••" class="w-full px-4 py-2.5 rounded-xl bg-vault-950 border border-white/10 focus:border-vault-cyan focus:outline-none text-slate-100 placeholder:text-slate-600">
+        </div>
+
+        <div id="field-track-group">
+          <label class="block text-slate-300 mb-1">Cyber Domain Focus</label>
+          <select id="auth-track-select" class="w-full px-4 py-2.5 rounded-xl bg-vault-950 border border-white/10 focus:border-vault-cyan focus:outline-none text-slate-100">
+            <option value="Foundations & Defense">Foundations & Defensive Intelligence</option>
+            <option value="SOC & Threat Hunting">SOC & Live Threat Hunting</option>
+            <option value="Penetration Testing & AppSec">Penetration Testing & AppSec</option>
+            <option value="Cloud Security & Zero Trust">Cloud Security & Zero Trust</option>
+          </select>
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-vault-cyan via-sky-400 to-vault-cyan hover:opacity-95 text-vault-950 font-bold text-xs tracking-wider transition-all shadow-lg shadow-vault-cyan/25 flex items-center justify-center gap-2 mt-2">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+          <span id="auth-btn-text">AUTHENTICATE TO STUDENT VAULT</span>
+        </button>
+
+        <div id="auth-success-msg" class="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 text-[11px] text-center hidden">
+          ✓ Authentication verified. Unlocking secure member portal...
+        </div>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <span>Looking for Master Admin Console?</span>
+        <a href="/admin" class="text-vault-cyan hover:underline font-bold flex items-center gap-1">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          <span>Founder SOC Console →</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 w-full border-t border-white/10 bg-vault-950 py-4 text-center text-xs font-mono text-slate-500">
+    Kalki Vault Unified Cyber Gateway • KV Technologies
+  </footer>
+
+  <script>
+    let currentAudience = 'student';
+    let currentMode = 'login';
+    let isBeatsPlaying = false;
+    let audioCtx = null;
+    let beatsInterval = null;
+
+    const audienceConfig = {
+      student: {
+        title: 'Student Academy Gateway',
+        desc: 'Access training labs & session resources',
+        color: 'sky',
+        btnTextLogin: 'AUTHENTICATE TO STUDENT VAULT',
+        btnTextReg: 'CREATE STUDENT ACCOUNT',
+        demoEmail: 'cadet.arjun@kalkivault.edu'
+      },
+      researcher: {
+        title: 'Security Researcher Portal',
+        desc: 'Coordinated disclosure & vulnerability sandbox',
+        color: 'purple',
+        btnTextLogin: 'AUTHENTICATE RESEARCHER IDENTITY',
+        btnTextReg: 'REGISTER RESEARCHER PROFILE',
+        demoEmail: 'researcher.neha@secops.io'
+      },
+      company: {
+        title: 'Enterprise Defense Gateway',
+        desc: 'Perimeter assessments & corporate security solutions',
+        color: 'emerald',
+        btnTextLogin: 'AUTHENTICATE CORPORATE CREDENTIALS',
+        btnTextReg: 'ENROLL ENTERPRISE TENANT',
+        demoEmail: 'ciso@enterprise-mesh.com'
+      }
+    };
+
+    function setAudience(aud) {
+      currentAudience = aud;
+      ['student', 'researcher', 'company'].forEach(k => {
+        const btn = document.getElementById('aud-btn-' + k);
+        if (k === aud) {
+          btn.className = 'p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 bg-vault-850 border-vault-cyan text-vault-cyan shadow-md';
+        } else {
+          btn.className = 'p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1 bg-vault-950 border-white/10 text-slate-400';
+        }
+      });
+
+      const cfg = audienceConfig[aud];
+      document.getElementById('portal-title').innerText = cfg.title;
+      document.getElementById('portal-desc').innerText = cfg.desc;
+      updateButtonText();
+    }
+
+    function setAuthMode(mode) {
+      currentMode = mode;
+      if (mode === 'register') {
+        document.getElementById('mode-btn-register').className = 'px-3 py-1 rounded-lg bg-vault-850 text-slate-100 font-bold';
+        document.getElementById('mode-btn-login').className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200';
+        document.getElementById('field-name-group').classList.remove('hidden');
+      } else {
+        document.getElementById('mode-btn-login').className = 'px-3 py-1 rounded-lg bg-vault-850 text-slate-100 font-bold';
+        document.getElementById('mode-btn-register').className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-slate-200';
+        document.getElementById('field-name-group').classList.add('hidden');
+      }
+      updateButtonText();
+    }
+
+    function updateButtonText() {
+      const cfg = audienceConfig[currentAudience];
+      document.getElementById('auth-btn-text').innerText = currentMode === 'login' ? cfg.btnTextLogin : cfg.btnTextReg;
+    }
+
+    function fillDemoCredentials() {
+      const cfg = audienceConfig[currentAudience];
+      document.getElementById('auth-email-input').value = cfg.demoEmail;
+      document.getElementById('auth-pass-input').value = 'KalkiDefense2026!';
+      if (currentMode === 'register') {
+        document.getElementById('auth-name-input').value = 'Cyber Operator';
+      }
+    }
+
+    function handlePortalAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email-input').value;
+      const name = document.getElementById('auth-name-input').value || 'Member User';
+      const track = document.getElementById('auth-track-select').value;
+
+      if (currentMode === 'register') {
+        let students = JSON.parse(localStorage.getItem('kv_students') || '[]');
+        students.push({ id: 'std_' + Date.now(), name: name, email: email, track: track, status: 'Active (Session 1)' });
+        localStorage.setItem('kv_students', JSON.stringify(students));
+      }
+
+      sessionStorage.setItem('kv_member_session', 'true');
+      sessionStorage.setItem('kv_member_email', email);
+      document.getElementById('auth-success-msg').classList.remove('hidden');
+
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1200);
+    }
+
+    // BACKGROUND PROCEDURAL CYBER BEATS SYNTHESIZER
+    function toggleCyberBeats() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      isBeatsPlaying = !isBeatsPlaying;
+      if (isBeatsPlaying) {
+        document.getElementById('beats-icon').className = 'w-4 h-4 text-vault-cyan animate-spin';
+        document.getElementById('beats-text').innerText = 'Cyber Beats: ON';
+        startProceduralBeats();
+      } else {
+        document.getElementById('beats-icon').className = 'w-4 h-4 text-slate-400';
+        document.getElementById('beats-text').innerText = 'Cyber Beats: Off';
+        clearInterval(beatsInterval);
+      }
+    }
+
+    function startProceduralBeats() {
+      let beatStep = 0;
+      beatsInterval = setInterval(() => {
+        if (!isBeatsPlaying) return;
+        const now = audioCtx.currentTime;
+        
+        // Low sub-bass pulse
+        if (beatStep % 4 === 0) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(65, now);
+          osc.frequency.exponentialRampToValueAtTime(32, now + 0.25);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(now); osc.stop(now + 0.26);
+        }
+
+        // Cyber Hi-Hat tick
+        const noiseOsc = audioCtx.createOscillator();
+        const noiseGain = audioCtx.createGain();
+        noiseOsc.type = 'triangle';
+        noiseOsc.frequency.setValueAtTime(800 + (beatStep % 4) * 200, now);
+        noiseGain.gain.setValueAtTime(0.015, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+        noiseOsc.connect(noiseGain); noiseGain.connect(audioCtx.destination);
+        noiseOsc.start(now); noiseOsc.stop(now + 0.06);
+
+        beatStep++;
+      }, 300);
+    }
+
+    // Canvas Background
+    const cvs = document.getElementById('login-bg-canvas');
+    const ctx = cvs.getContext('2d');
+    let W = cvs.width = window.innerWidth, H = cvs.height = window.innerHeight;
+    const pts = [];
+    for(let i=0; i<45; i++) pts.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5 });
+
+    function renderPts() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+      });
+      requestAnimationFrame(renderPts);
+    }
+    renderPts();
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

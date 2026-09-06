@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Kalki Vault — KV Technologies Cyber Ecosystem</title>
+  <meta name="description" content="Learn about Kalki Vault (KV Technologies), our core brand vision, research-driven cybersecurity ethos, and community defense mission.">
+  <meta name="theme-color" content="#030712">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            vault: {
+              950: '#030712', 900: '#070d1d', 850: '#0b1329', 800: '#111e3f',
+              700: '#1e293b', 600: '#334155', cyan: '#00f0ff', emerald: '#10b981',
+              gold: '#f59e0b', crimson: '#ff0055', purple: '#a855f7'
+            }
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #030712; color: #f1f5f9; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #030712; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen bg-vault-950 text-slate-100 flex flex-col justify-between selection:bg-vault-cyan/30 selection:text-vault-cyan">
+
+  <!-- NAVBAR -->
+  <header class="w-full bg-vault-900/90 border-b border-white/10 backdrop-blur-md px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+    <a href="index.html" class="flex items-center gap-3">
+      <img src="assets/kv_logo.jpg" alt="KV Technologies Shield" class="w-10 h-10 rounded-xl object-cover border border-vault-cyan/40 shadow-lg">
+      <div>
+        <span class="font-display font-bold text-lg tracking-wider text-slate-100 block">
+          KALKI <span class="text-vault-cyan">VAULT</span>
+        </span>
+        <span class="text-[9px] font-mono tracking-widest text-slate-400 uppercase block -mt-1">
+          KV Technologies • About Us
+        </span>
+      </div>
+    </a>
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-xs font-mono text-slate-400 hover:text-vault-cyan flex items-center gap-1.5 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Return to Platform</span>
+      </a>
+      <a href="login.html" class="px-4 py-2 rounded-xl bg-gradient-to-r from-vault-cyan to-sky-400 text-vault-950 text-xs font-mono font-bold flex items-center gap-1.5 shadow-md hover:scale-105 transition-all">
+        <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+        <span>Member Login</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN ABOUT CONTENT -->
+  <main class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-12 space-y-16 flex-1">
+    
+    <!-- Hero Banner -->
+    <div class="text-center max-w-3xl mx-auto space-y-4">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-vault-900 border border-vault-cyan/30 text-xs font-mono text-vault-cyan">
+        <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+        <span>ORGANIZATION PROFILE</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-slate-100 tracking-tight">
+        Defending the Future Through <span class="text-vault-cyan">Understanding.</span>
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+        Kalki Vault (KV Technologies / Kalki Vault Technologies) is an elite cyber defense intelligence and awareness ecosystem designed to bridge students, security researchers, and organizations.
+      </p>
+    </div>
+
+    <!-- Core Brand Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-3xl bg-vault-900/70 border border-white/10 space-y-3 shadow-xl hover:border-sky-400/40 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-sky-950/40 border border-sky-400/40 flex items-center justify-center text-sky-400">
+          <i data-lucide="book-open" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-lg font-display font-bold text-slate-100">Foundational Awareness</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Cybersecurity is not about fear—it is about proactive comprehension. We break down complex attack mechanics into intuitive, actionable defense protocols.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-3xl bg-vault-900/70 border border-white/10 space-y-3 shadow-xl hover:border-purple-400/40 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-purple-950/40 border border-purple-400/40 flex items-center justify-center text-purple-400">
+          <i data-lucide="microscope" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-lg font-display font-bold text-slate-100">Research & Ethics</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Committed strictly to defensive security research, coordinated vulnerability disclosure, and ethical standards that preserve digital trust.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-3xl bg-vault-900/70 border border-white/10 space-y-3 shadow-xl hover:border-emerald-400/40 transition-all">
+        <div class="w-10 h-10 rounded-xl bg-emerald-950/40 border border-emerald-400/40 flex items-center justify-center text-emerald-400">
+          <i data-lucide="users" class="w-5 h-5"></i>
+        </div>
+        <h3 class="text-lg font-display font-bold text-slate-100">Community Defense</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Uniting learners and seasoned practitioners to build resilient digital infrastructure across universities, labs, and modern enterprises.
+        </p>
+      </div>
+    </div>
+
+    <!-- Ethics Charter -->
+    <div class="p-8 rounded-3xl bg-vault-900/60 border border-vault-cyan/30 backdrop-blur-md space-y-4 shadow-2xl">
+      <h2 class="text-xl font-display font-bold text-slate-100 flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-5 h-5 text-vault-cyan"></i>
+        <span>Our Ethical Charter & Principles</span>
+      </h2>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        At Kalki Vault, every tool, curriculum module, and research paper is engineered with responsible disclosure and defense-first principles. We do not participate in offensive exploit sales or unauthorized testing. All intelligence is gathered to fortify perimeters and empower defenders.
+      </p>
+    </div>
+
+    <!-- PUBLIC USER FEEDBACK BOX -->
+    <div class="p-6 sm:p-8 rounded-3xl bg-vault-900/80 border border-white/10 space-y-4 shadow-xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-vault-950 border border-white/10 flex items-center justify-center text-slate-400">
+          <i data-lucide="message-square" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-display font-bold text-slate-100">Public Feedback & Inquiries</h3>
+          <p class="text-xs font-mono text-slate-400">Share your thoughts, suggestions, or general queries with the Kalki Vault team.</p>
+        </div>
+      </div>
+
+      <form onsubmit="handlePublicFeedback(event)" class="space-y-3 font-mono text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Your Message or Inquiry</label>
+          <input 
+            type="text" 
+            id="public-feedback-input" 
+            required 
+            placeholder="Type your feedback or thoughts here..." 
+            class="w-full px-4 py-2.5 rounded-xl bg-vault-950 border border-white/10 focus:border-vault-cyan focus:outline-none text-slate-100 placeholder:text-slate-600 tracking-wider"
+          >
+        </div>
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-vault-950 border border-white/20 hover:border-vault-cyan text-slate-200 text-xs font-mono font-semibold transition-all">
+          Submit Feedback
+        </button>
+        <div id="public-feedback-toast" class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs hidden">
+          ✓ Thank you! Your feedback has been received and logged by our community team.
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full border-t border-white/10 bg-vault-950 py-6 text-center text-xs font-mono text-slate-500">
+    © 2026 Kalki Vault Technologies (KV Technologies). All rights reserved.
+  </footer>
+
+  <script>
+    function handlePublicFeedback(e) {
+      e.preventDefault();
+      document.getElementById('public-feedback-toast').classList.remove('hidden');
+      document.getElementById('public-feedback-input').value = '';
+    }
+    lucide.createIcons();
+  </script>
+</body>
+</html>
