@@ -10,7 +10,7 @@ export interface ShotKeyframe {
 
 export class CameraDirector {
   public camera: THREE.PerspectiveCamera;
-  private currentPos = new THREE.Vector3(0, 0, 8.5);
+  private currentPos = new THREE.Vector3(0, 0.3, 4.5);
   private currentTarget = new THREE.Vector3(0, 0, 0);
   private currentFov = 45;
 
@@ -24,30 +24,31 @@ export class CameraDirector {
 
   // Cinematic Keyframe Timeline across scroll progression (0.0 to 1.0)
   private keyframes: ShotKeyframe[] = [
-    // SHOT 01: Extreme wide shot (Opening)
-    { progress: 0.0, position: new THREE.Vector3(0, 0.4, 7.8), target: new THREE.Vector3(0, 0, 0), fov: 45, roll: 0 },
-    // SHOT 02: Slow camera drift & push
-    { progress: 0.12, position: new THREE.Vector3(0.5, 0.2, 6.2), target: new THREE.Vector3(0, 0, 0), fov: 42, roll: 0.02 },
-    // SHOT 03: Orbit around frontal lobe
-    { progress: 0.28, position: new THREE.Vector3(1.8, 0.6, 4.4), target: new THREE.Vector3(0.2, 0.1, 0), fov: 38, roll: -0.03 },
-    // SHOT 04: Move toward cortical surface (Threat radar section)
-    { progress: 0.45, position: new THREE.Vector3(-1.2, 0.4, 3.2), target: new THREE.Vector3(-0.3, 0.1, 0), fov: 35, roll: 0.04 },
-    // SHOT 05: Extreme close-up on gyri / sulci (Quantum Lab)
-    { progress: 0.62, position: new THREE.Vector3(0.4, -0.2, 2.1), target: new THREE.Vector3(0.1, 0, 0), fov: 32, roll: -0.02 },
-    // SHOT 06: Enter microscopic neural environment (Deep dive)
-    { progress: 0.78, position: new THREE.Vector3(-0.2, 0.1, 1.4), target: new THREE.Vector3(0, 0, 0), fov: 28, roll: 0.05 },
-    // SHOT 07: Massive camera pullback revealing full neural universe
-    { progress: 1.0, position: new THREE.Vector3(0, 1.2, 8.5), target: new THREE.Vector3(0, 0, 0), fov: 48, roll: 0 },
+    // SHOT 01: Opening — brain fills the frame
+    { progress: 0.0,  position: new THREE.Vector3(0,    0.3,  4.5), target: new THREE.Vector3(0,    0, 0), fov: 52, roll: 0 },
+    // SHOT 02: Slow orbit rightward
+    { progress: 0.12, position: new THREE.Vector3(1.2,  0.2,  4.0), target: new THREE.Vector3(0.1,  0, 0), fov: 50, roll:  0.02 },
+    // SHOT 03: Frontal lobe close sweep
+    { progress: 0.28, position: new THREE.Vector3(1.6,  0.5,  3.2), target: new THREE.Vector3(0.2, 0.1, 0), fov: 46, roll: -0.03 },
+    // SHOT 04: Threat radar section — right side
+    { progress: 0.45, position: new THREE.Vector3(-1.0, 0.3,  3.0), target: new THREE.Vector3(-0.2, 0.1, 0), fov: 44, roll: 0.04 },
+    // SHOT 05: Quantum Lab — cortical surface close pass
+    { progress: 0.62, position: new THREE.Vector3(0.3, -0.1,  2.4), target: new THREE.Vector3(0.1,  0, 0), fov: 40, roll: -0.02 },
+    // SHOT 06: Deep interior pull back to reveal full anatomy
+    { progress: 0.78, position: new THREE.Vector3(-0.2, 0.2,  3.6), target: new THREE.Vector3(0,    0, 0), fov: 48, roll: 0.03 },
+    // SHOT 07: Grand pullback — full neural universe
+    { progress: 1.0,  position: new THREE.Vector3(0,    0.8,  5.5), target: new THREE.Vector3(0,    0, 0), fov: 54, roll: 0 },
   ];
 
   constructor(aspectRatio: number) {
-    this.camera = new THREE.PerspectiveCamera(45, aspectRatio, 0.1, 100);
+    this.camera = new THREE.PerspectiveCamera(52, aspectRatio, 0.1, 100);
     this.camera.position.copy(this.currentPos);
     this.camera.lookAt(this.currentTarget);
 
     window.addEventListener('mousemove', (e) => {
-      this.targetMouseOffset.x = (e.clientX / window.innerWidth - 0.5) * 0.45;
-      this.targetMouseOffset.y = -(e.clientY / window.innerHeight - 0.5) * 0.35;
+      // Use normalized screen coords for gentle scene parallax
+      this.targetMouseOffset.x = (e.clientX / window.innerWidth  - 0.5) * 0.28;
+      this.targetMouseOffset.y = -(e.clientY / window.innerHeight - 0.5) * 0.22;
     });
   }
 

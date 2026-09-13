@@ -17,6 +17,11 @@ import {
   validateGateTicket,
   DefconLevel
 } from './src/server/authBackend';
+import {
+  queryFable51,
+  streamFable51,
+  isFableConfigured
+} from './src/server/fableService';
 
 function parseRequestBody(req: IncomingMessage): Promise<any> {
   return new Promise((resolve) => {
@@ -155,6 +160,64 @@ export default defineConfig({
             if (url === '/api/admin/audit-logs' && req.method === 'GET') {
               const result = getAuditLogs(sessionToken);
               return sendJson(res, result.success ? 200 : 403, result);
+            }
+
+            // Claude Fable 5.1 Status Check
+            if (url === '/api/fable/status' && req.method === 'GET') {
+              return sendJson(res, 200, {
+                success: true,
+                model: 'anthropic/claude-fable-5.1',
+                isConfigured: isFableConfigured(),
+                timestamp: Date.now()
+              });
+            }
+
+            // Claude Fable 5.1 Chat Completion (Streaming & Synchronous)
+            if (url === '/api/fable/chat' && req.method === 'POST') {
+              const body = await parseRequestBody(req);
+              const messages = body.messages || [
+                { role: 'user', content: body.prompt || '' }
+              ];
+
+              if (body.stream !== false) {
+                res.writeHead(200, {
+                  'Content-Type': 'text/event-stream',
+                  'Cache-Control': 'no-cache',
+                  'Connection': 'keep-alive',
+                  'Access-Control-Allow-Origin': '*'
+                });
+
+                await streamFable51(
+                  messages,
+                  (chunk) => {
+                    res.write(`data: ${JSON.stringify({ chunk })}\n\n`);
+                  },
+                  () => {
+                    res.write(`data: [DONE]\n\n`);
+                    res.end();
+                  },
+                  (err) => {
+                    res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+                    res.end();
+                  },
+                  body.max_tokens || 350
+                );
+                return;
+              } else {
+                try {
+                  const text = await queryFable51(
+                    body.prompt || messages[messages.length - 1]?.content || '',
+                    messages.slice(0, -1)
+                  );
+                  return sendJson(res, 200, {
+                    success: true,
+                    model: 'anthropic/claude-fable-5.1',
+                    content: text
+                  });
+                } catch (err: any) {
+                  return sendJson(res, 500, { success: false, error: err.message });
+                }
+              }
             }
 
             return sendJson(res, 404, { success: false, error: 'Endpoint not found' });

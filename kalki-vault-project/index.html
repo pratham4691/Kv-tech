@@ -42,8 +42,8 @@
           },
           keyframes: {
             glowPulse: {
-              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
-              '50%': { opacity: '0.8', transform: 'scale(1.03)' }
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.8' }
             },
             reverseSpin: {
               from: { transform: 'rotate(360deg)' },
@@ -256,10 +256,8 @@
       mix-blend-mode: screen;
     }
     .cursor-orb.hovering {
-      width: 40px;
-      height: 40px;
-      border-color: rgba(168, 85, 247, 0.8);
-      background: rgba(168, 85, 247, 0.08);
+      border-color: rgba(0, 240, 255, 0.9);
+      background: rgba(0, 240, 255, 0.08);
     }
     .cursor-dot {
       position: fixed;
@@ -406,22 +404,6 @@
       to { transform: translateY(100vh); }
     }
 
-    /* 11. RIPPLE CLICK EFFECT */
-    .ripple-effect {
-      position: relative;
-      overflow: hidden;
-    }
-    .ripple-effect .ripple {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(0, 240, 255, 0.3);
-      transform: scale(0);
-      animation: rippleExpand 0.6s ease-out forwards;
-      pointer-events: none;
-    }
-    @keyframes rippleExpand {
-      to { transform: scale(4); opacity: 0; }
-    }
 
     /* 12. SECTION DIVIDER — Animated gradient line */
     .cyber-divider {
@@ -710,7 +692,7 @@
         </button>
 
         <!-- Enter Vault (Login) -->
-        <a href="login.html" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-vault-cyan via-sky-400 to-vault-cyan text-vault-950 text-xs font-mono font-extrabold flex items-center gap-1.5 shadow-lg shadow-vault-cyan/25 hover:shadow-vault-cyan/45 hover:scale-105 transition-all">
+        <a href="login.html" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-vault-cyan via-sky-400 to-vault-cyan text-vault-950 text-xs font-mono font-extrabold flex items-center gap-1.5 shadow-lg shadow-vault-cyan/25 hover:shadow-vault-cyan/45 hover:brightness-110 active:opacity-90 transition-all">
           <i data-lucide="lock" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">ENTER VAULT</span>
         </a>
@@ -849,9 +831,9 @@
               <span>CRITICAL ATTACK VECTORS</span>
             </div>
 
-            <button onclick="triggerEmergencyAlert('social-engineering')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-all flex items-center justify-between group shadow-md shadow-rose-950/20">
+            <button onclick="triggerEmergencyAlert('social-engineering')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-colors flex items-center justify-between group shadow-md shadow-rose-950/20 active:bg-rose-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 transition-colors">
                   <i data-lucide="users" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -862,9 +844,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('phishing')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-all flex items-center justify-between group shadow-md shadow-rose-950/20">
+            <button onclick="triggerEmergencyAlert('phishing')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-colors flex items-center justify-between group shadow-md shadow-rose-950/20 active:bg-rose-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 transition-colors">
                   <i data-lucide="mail" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -875,9 +857,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('malware')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-all flex items-center justify-between group shadow-md shadow-rose-950/20">
+            <button onclick="triggerEmergencyAlert('malware')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-colors flex items-center justify-between group shadow-md shadow-rose-950/20 active:bg-rose-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 transition-colors">
                   <i data-lucide="bug" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -888,9 +870,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('identity-theft')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-all flex items-center justify-between group shadow-md shadow-rose-950/20">
+            <button onclick="triggerEmergencyAlert('identity-theft')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-colors flex items-center justify-between group shadow-md shadow-rose-950/20 active:bg-rose-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 transition-colors">
                   <i data-lucide="fingerprint" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -901,9 +883,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('financial-fraud')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-all flex items-center justify-between group shadow-md shadow-rose-950/20">
+            <button onclick="triggerEmergencyAlert('financial-fraud')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-rose-500/30 hover:border-rose-400 hover:bg-rose-950/40 transition-colors flex items-center justify-between group shadow-md shadow-rose-950/20 active:bg-rose-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 transition-colors">
                   <i data-lucide="coins" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -996,20 +978,20 @@
               <!-- Quick Simulation Actions -->
               <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-2 border-t border-white/10 text-xs">
                 <div class="flex items-center gap-2">
-                  <button onclick="triggerSynapticSurge()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-vault-950 font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all hover:scale-105">
+                  <button onclick="triggerSynapticSurge()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-vault-950 font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 hover:brightness-110 active:opacity-90 transition-colors cursor-pointer">
                     <i data-lucide="zap" class="w-3.5 h-3.5"></i>
                     <span>SYNAPTIC SURGE</span>
                   </button>
-                  <button onclick="simulateBrainDefense('quantum')" class="px-3 py-1.5 rounded-xl bg-vault-800 border border-vault-cyan/40 hover:border-vault-cyan text-vault-cyan font-bold flex items-center gap-1.5 transition-all">
+                  <button onclick="simulateBrainDefense('quantum')" class="px-3 py-1.5 rounded-xl bg-vault-800 border border-vault-cyan/40 hover:border-vault-cyan text-vault-cyan font-bold flex items-center gap-1.5 active:bg-vault-700 transition-colors cursor-pointer">
                     <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
                     <span>SIMULATE INTERCEPT</span>
                   </button>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button onclick="resetBrainCamera()" title="Reset 3D Camera Orientation" class="p-1.5 rounded-xl bg-vault-950 border border-white/10 hover:border-white/30 text-slate-400 hover:text-white transition-all">
+                  <button onclick="resetBrainCamera()" title="Reset 3D Camera Orientation" class="p-1.5 rounded-xl bg-vault-950 border border-white/10 hover:border-white/30 text-slate-400 hover:text-white active:bg-white/10 transition-colors cursor-pointer">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                   </button>
-                  <button onclick="openRotationalThreatModal()" class="px-3 py-1.5 rounded-xl bg-vault-950 border border-white/10 hover:border-vault-cyan text-slate-300 hover:text-vault-cyan font-bold flex items-center gap-1 transition-all">
+                  <button onclick="openRotationalThreatModal()" class="px-3 py-1.5 rounded-xl bg-vault-950 border border-white/10 hover:border-vault-cyan text-slate-300 hover:text-vault-cyan font-bold flex items-center gap-1 active:bg-vault-850 transition-colors cursor-pointer">
                     <i data-lucide="rotate-3d" class="w-3.5 h-3.5"></i>
                     <span>THREAT WHEEL</span>
                   </button>
@@ -1025,9 +1007,9 @@
               <span>ACTIVE DEFENSIVE ARMOR</span>
             </div>
 
-            <button onclick="triggerEmergencyAlert('web-exploits')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-all flex items-center justify-between group shadow-md shadow-sky-950/20">
+            <button onclick="triggerEmergencyAlert('web-exploits')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-colors flex items-center justify-between group shadow-md shadow-sky-950/20 active:bg-sky-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 transition-colors">
                   <i data-lucide="globe" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -1038,9 +1020,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('mobile-security')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-all flex items-center justify-between group shadow-md shadow-sky-950/20">
+            <button onclick="triggerEmergencyAlert('mobile-security')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-colors flex items-center justify-between group shadow-md shadow-sky-950/20 active:bg-sky-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 transition-colors">
                   <i data-lucide="smartphone" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -1051,9 +1033,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('network-attacks')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-all flex items-center justify-between group shadow-md shadow-sky-950/20">
+            <button onclick="triggerEmergencyAlert('network-attacks')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-colors flex items-center justify-between group shadow-md shadow-sky-950/20 active:bg-sky-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 transition-colors">
                   <i data-lucide="network" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -1064,9 +1046,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('cloud-security')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-all flex items-center justify-between group shadow-md shadow-sky-950/20">
+            <button onclick="triggerEmergencyAlert('cloud-security')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-colors flex items-center justify-between group shadow-md shadow-sky-950/20 active:bg-sky-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 transition-colors">
                   <i data-lucide="cloud" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -1077,9 +1059,9 @@
               <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-sky-400 transition-colors"></i>
             </button>
 
-            <button onclick="triggerEmergencyAlert('data-privacy')" class="tilt-card w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-all flex items-center justify-between group shadow-md shadow-sky-950/20">
+            <button onclick="triggerEmergencyAlert('data-privacy')" class="w-full text-left p-3 rounded-2xl bg-vault-900/90 border border-sky-400/30 hover:border-sky-400 hover:bg-sky-950/40 transition-colors flex items-center justify-between group shadow-md shadow-sky-950/20 active:bg-sky-950/60 cursor-pointer">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 group-hover:scale-110 transition-transform">
+                <div class="w-8 h-8 rounded-xl bg-sky-400/20 border border-sky-400/40 flex items-center justify-center text-sky-400 transition-colors">
                   <i data-lucide="lock" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -1670,7 +1652,7 @@
           <button 
             id="btn-confirm-mitigation"
             onclick="confirmMitigationApplied()" 
-            class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 text-vault-950 font-mono font-bold text-sm tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:scale-[1.01] transition-all"
+            class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 text-vault-950 font-mono font-bold text-sm tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:brightness-110 active:opacity-90 transition-all cursor-pointer"
           >
             <i data-lucide="shield-check" class="w-5 h-5"></i>
             <span>EXECUTE COMPLETE MITIGATION & SECURE PERIMETER</span>
@@ -1715,7 +1697,7 @@
         <div class="pt-2">
           <button 
             onclick="closeEmergencyAlert()" 
-            class="px-8 py-3.5 rounded-xl bg-emerald-500 text-vault-950 font-mono font-extrabold text-xs tracking-wider hover:bg-emerald-400 transition-colors shadow-xl shadow-emerald-500/30 hover:scale-105"
+            class="px-8 py-3.5 rounded-xl bg-emerald-500 text-vault-950 font-mono font-extrabold text-xs tracking-wider hover:bg-emerald-400 hover:brightness-110 active:opacity-90 transition-colors shadow-xl shadow-emerald-500/30 cursor-pointer"
           >
             CONTINUE EXPLORING THE VAULT
           </button>
@@ -1737,7 +1719,7 @@
 
         <!-- Center Glowing Core -->
         <div class="copilot-sphere w-8 h-8 rounded-full bg-gradient-to-tr from-purple-900 via-vault-cyan/40 to-purple-600 flex items-center justify-center text-white shadow-inner">
-          <i data-lucide="bot" class="w-4 h-4 text-vault-cyan group-hover:scale-110 transition-transform"></i>
+          <i data-lucide="bot" class="w-4 h-4 text-vault-cyan transition-colors"></i>
         </div>
 
         <!-- Live Status Dot -->
@@ -1755,7 +1737,7 @@
   </div>
 
   <!-- KALKI NEURAL AI CYBER COPILOT INTERACTIVE MODAL / DRAWER -->
-  <div id="copilot-drawer" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-vault-950/85 backdrop-blur-2xl hidden">
+  <div id="copilot-drawer" class="fixed inset-0 flex items-center justify-center p-4 bg-vault-950/85 backdrop-blur-2xl hidden" style="z-index: 99999;">
     <div class="relative w-full max-w-3xl rounded-3xl bg-vault-900/95 border-2 border-purple-500/50 shadow-2xl shadow-purple-900/40 overflow-hidden flex flex-col font-mono text-xs max-h-[90vh]">
       
       <!-- Copilot Header Bar -->
@@ -1767,13 +1749,16 @@
           <div>
             <div class="flex items-center gap-2">
               <span class="font-display font-bold text-sm text-slate-100">KALKI NEURAL COPILOT</span>
-              <span class="text-[9px] px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-500/30">v5.2 COGNITIVE</span>
+              <span id="copilot-model-badge" class="text-[9px] px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-mono flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                CLAUDE FABLE 5.1 LIVE
+              </span>
             </div>
             <div class="text-[10px] text-slate-400 flex items-center gap-2">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>SYNAPSE MESH: 320 NODES ONLINE</span>
+              <span id="copilot-token-status">OPENROUTER TOKEN ATTESTED</span>
               <span>•</span>
-              <span class="text-vault-cyan">LATENCY: 12ms</span>
+              <span class="text-vault-cyan">MODEL: anthropic/claude-fable-5.1</span>
             </div>
           </div>
         </div>
@@ -1946,6 +1931,27 @@
           window.speechSynthesis.speak(utterance);
         }
       }
+      playDrone(freq = 220, duration = 0.4) {
+        if (this.isMuted) return;
+        try {
+          this.init();
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration + 0.02);
+        } catch(e) {}
+      }
+      playEmergencyAlarm() {
+        this.playDangerAlert();
+      }
     }
     const audio = new TacticalAudio();
 
@@ -2020,16 +2026,26 @@
     // 3. KALKI NEURAL AI COPILOT LOGIC
     function toggleCopilot() {
       const drawer = document.getElementById('copilot-drawer');
-      const isHidden = drawer.classList.contains('hidden');
+      if (!drawer) return;
+      const isHidden = drawer.classList.contains('hidden') || drawer.style.display === 'none';
       if (isHidden) {
         drawer.classList.remove('hidden');
+        drawer.style.display = 'flex';
         audio.playBlip(950, 0.06);
-        setTimeout(() => document.getElementById('copilot-input').focus(), 100);
+        setTimeout(() => {
+          const inp = document.getElementById('copilot-input');
+          if (inp) inp.focus();
+        }, 100);
       } else {
         drawer.classList.add('hidden');
+        drawer.style.display = 'none';
         audio.playBlip(450, 0.04);
       }
     }
+    window.toggleCopilot = toggleCopilot;
+    window.askCopilotPrompt = askCopilotPrompt;
+    window.triggerCopilotAction = triggerCopilotAction;
+    window.handleCopilotSubmit = handleCopilotSubmit;
 
     // Keyboard shortcut 'K' for Copilot
     window.addEventListener('keydown', (e) => {
@@ -2044,67 +2060,65 @@
       audio.playBlip(1100, 0.05);
     }
 
+    let copilotConversationHistory = [];
+
+    // Check Fable 5.1 status on boot
+    async function checkFableStatus() {
+      try {
+        const res = await fetch('/api/fable/status');
+        const data = await res.json();
+        const badge = document.getElementById('copilot-model-badge');
+        const tokenStatus = document.getElementById('copilot-token-status');
+        if (data.isConfigured) {
+          if (badge) badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>CLAUDE FABLE 5.1 LIVE`;
+          if (tokenStatus) tokenStatus.innerText = `OPENROUTER TOKEN ATTESTED`;
+        } else {
+          if (badge) badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-vault-gold"></span>HEURISTIC MODE`;
+          if (tokenStatus) tokenStatus.innerText = `FALLBACK ACTIVE`;
+        }
+      } catch {
+        // Dev server offline or static preview
+      }
+    }
+    setTimeout(checkFableStatus, 500);
+
     function triggerCopilotAction(action) {
       audio.playBlip(750, 0.04);
       if (action === 'zeroday') {
-        streamCopilotMessage("ZERO-DAY VULNERABILITY HEURISTIC REPORT", `
-          <div class="space-y-1.5 text-xs">
-            <div class="text-rose-400 font-bold">⚡ CRITICAL CORRELATION: 2 Active Zero-Day Vectors Tracked</div>
-            <div>• <strong class="text-slate-100">CVE-2026-4401</strong> (AitM Reverse-Proxy Session Hijack): Bypasses legacy push/SMS MFA. <span class="text-emerald-400 font-semibold">[MITIGATED: FIDO2 WebAuthn token binding enforced]</span>.</div>
-            <div>• <strong class="text-slate-100">CVE-2026-8819</strong> (Reflective In-Memory DLL Process Hollowing): Injects into trusted telemetry endpoints. <span class="text-emerald-400 font-semibold">[MITIGATED: eBPF dynamic memory canary active]</span>.</div>
-            <div class="text-slate-400 pt-1">All perimeter nodes attested against NIST CVE database. Zero lateral movement observed.</div>
-          </div>
-        `);
+        askCopilotPrompt("Generate a real-time Zero-Day Vulnerability Heuristic Report analyzing CVE-2026-4401 and CVE-2026-8819 with FIDO2 origin binding mitigations.");
       } else if (action === 'quantum') {
-        streamCopilotMessage("QUANTUM PENETRATION TEST SIMULATION", `
-          <div class="space-y-1.5 text-xs">
-            <div class="text-purple-300 font-bold">🔬 SIMULATING SHOR'S QUANTUM FACTORING ON LATTICE CORE</div>
-            <div>• Target Cryptosystem: <span class="text-vault-cyan font-semibold">ML-KEM-1024 (Kyber Lattice)</span></div>
-            <div>• Quantum Qubits Simulated: <span class="text-slate-100">4,096 Logical Qubits</span></div>
-            <div>• Shortest Vector Problem (SVP) Dimension: <span class="text-slate-100">k=4, q=3329</span></div>
-            <div class="text-emerald-400 font-bold">✓ RESULT: Quantum Period-Finding Ineffective. Cryptographic hardness remains Ω(2^256). Post-quantum margin 100%.</div>
-          </div>
-        `);
+        askCopilotPrompt("Simulate Shor's quantum factoring penetration test on the ML-KEM-1024 Kyber lattice cryptosystem. Calculate post-quantum security margin.");
       } else if (action === 'neutralize') {
         audio.playDangerAlert();
-        streamCopilotMessage("GLOBAL THREAT NEUTRALIZATION ENGAGED", `
-          <div class="space-y-1.5 text-xs">
-            <div class="text-emerald-400 font-bold">🛰️ GLOBAL AIR-GAP ISOLATION BROADCAST SENT TO ALL EDGES</div>
-            <div>• Singapore, Frankfurt, Ashburn, Tokyo nodes synchronized.</div>
-            <div>• Dropping all unauthenticated TCP/UDP incoming syn-packets.</div>
-            <div class="text-vault-cyan font-bold">✓ ALL RADAR THREAT ARCS MITIGATED. DIGITAL BASES SECURED.</div>
-          </div>
-        `);
-        setTimeout(() => audio.playSafeChime(), 600);
+        askCopilotPrompt("Execute emergency sovereign air-gap isolation command and summarize perimeter threat mitigation across edge datacenters.");
+        setTimeout(() => audio.playSafeChime(), 800);
       } else if (action === 'ebpf') {
-        streamCopilotMessage("eBPF INGRESS FIREWALL FILTER", `
-          <div class="space-y-2 text-xs">
-            <div class="text-vault-gold font-bold">⚡ GENERATED LINUX KERNEL XDP eBPF DEFENSE FILTER:</div>
-            <pre class="p-3 rounded-xl bg-vault-950 border border-white/10 text-[10px] text-emerald-400 overflow-x-auto leading-relaxed font-mono">
-SEC("xdp")
-int kalki_filter(struct xdp_md *ctx) {
-    void *data = (void *)(long)ctx->data;
-    void *data_end = (void *)(long)ctx->data_end;
-    struct ethhdr *eth = data;
-    if ((void *)(eth + 1) > data_end) return XDP_PASS;
-    // Check FIDO2 cryptographic token attestation header
-    if (!verify_kalki_handshake(data, data_end)) {
-        return XDP_DROP; // Drop AitM and rogue packets at NIC wire
-    }
-    return XDP_PASS;
-}</pre>
-          </div>
-        `);
+        askCopilotPrompt("Provide the production Linux kernel XDP eBPF ingress firewall C program to enforce FIDO2 cryptographic token attestation and drop AitM reverse proxy packets.");
       }
     }
 
     function askCopilotPrompt(prompt) {
-      document.getElementById('copilot-input').value = prompt;
+      const input = document.getElementById('copilot-input');
+      if (input) input.value = prompt;
       handleCopilotSubmit(new Event('submit'));
     }
 
-    function handleCopilotSubmit(e) {
-      e.preventDefault();
+    function getCopilotLocalFallback(q) {
+      const queryLower = q.toLowerCase();
+      if (queryLower.includes('aitm') || queryLower.includes('reverse proxy') || queryLower.includes('phishing')) {
+        return `AitM proxies (e.g., Evilginx) intercept session cookies by transparently relaying traffic. Standard push or SMS MFA fails because the adversary captures the authenticated session token.\n\nKalki Countermeasure: Enforces FIDO2 / WebAuthn hardware passkeys where credentials are cryptographically bound to the genuine origin domain (Origin Binding), rendering AitM proxies mathematically incapable of completing the challenge.`;
+      } else if (queryLower.includes('quantum') || queryLower.includes('kyber') || queryLower.includes('lattice') || queryLower.includes('dilithium')) {
+        return `Quantum computers utilizing Shor's Algorithm will factor RSA-4096 and discrete logs in elliptic curve cryptography in polynomial time.\n\nKalki Architecture: Implements NIST FIPS 203 ML-KEM (Kyber-1024) and FIPS 204 ML-DSA (Dilithium-5). Hardness relies on high-dimensional Module Learning With Errors (M-LWE), which provides security margin Ω(2^256) even against quantum period-finding algorithms.`;
+      } else if (queryLower.includes('ransomware') || queryLower.includes('malware') || queryLower.includes('isolate') || queryLower.includes('quarantine')) {
+        return `Ransomware deploys in-memory reflective DLLs and attempts fast volume shadow copy purging followed by multi-threaded cryptographic file locking.\n\nKalki Kill-Switch: Autonomous micro-segmentation detects anomalous mass file entropy changes (>7.9 bits/byte on disk writes) and severs process network access in under 42ms, preserving immutable cloud-replicated snapshots.`;
+      } else if (queryLower.includes('zero trust') || queryLower.includes('zerotrust')) {
+        return `Kalki operates under the strict mandate: "Never Trust, Continually Attest". Every packet, microservice call, and administrative action requires continuous cryptographic attestation.\n• Ingress: Mutual TLS 1.3 with hardware-bound certificates.\n• Lateral: Ephemeral token leasing with 5-minute cryptographic expiration.`;
+      }
+      return `Query analyzed across Kalki Vault telemetry databases. Threat vector evaluated against 12 institutional risk classifications.\nAutonomous recommendation: Maintain active zero-trust posture, inspect incoming telemetry on the Global Radar, and review the Kill Chain lifecycle.`;
+    }
+
+    async function handleCopilotSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
       const input = document.getElementById('copilot-input');
       const q = input.value.trim();
       if (!q) return;
@@ -2113,62 +2127,97 @@ int kalki_filter(struct xdp_md *ctx) {
       appendCopilotUserMessage(q);
       input.value = '';
 
-      const queryLower = q.toLowerCase();
-      let title = "COGNITIVE DEFENSE ANALYSIS";
-      let responseHtml = "";
-
-      if (queryLower.includes('aitm') || queryLower.includes('reverse proxy') || queryLower.includes('phishing')) {
-        title = "ADVERSARY-IN-THE-MIDDLE (AitM) PROTOCOL";
-        responseHtml = `
-          <div class="space-y-1.5 text-xs">
-            <p>AitM proxies (e.g., Evilginx) intercept session cookies by transparently relaying traffic. Standard push or SMS MFA fails because the adversary captures the authenticated session token.</p>
-            <div class="p-2.5 rounded-xl bg-vault-950 border border-emerald-500/30 text-emerald-300">
-              <strong>Kalki Countermeasure:</strong> Enforces FIDO2 / WebAuthn hardware passkeys where credentials are cryptographically bound to the genuine origin domain (Origin Binding), rendering AitM proxies mathematically incapable of completing the challenge.
-            </div>
-          </div>
-        `;
-      } else if (queryLower.includes('quantum') || queryLower.includes('kyber') || queryLower.includes('lattice') || queryLower.includes('dilithium')) {
-        title = "POST-QUANTUM LATTICE CRYPTOGRAPHY";
-        responseHtml = `
-          <div class="space-y-1.5 text-xs">
-            <p>Quantum computers utilizing Shor's Algorithm will factor RSA-4096 and discrete logs in elliptic curve cryptography in polynomial time.</p>
-            <div class="p-2.5 rounded-xl bg-vault-950 border border-purple-500/30 text-purple-300">
-              <strong>Kalki Architecture:</strong> Implements NIST FIPS 203 ML-KEM (Kyber-1024) and FIPS 204 ML-DSA (Dilithium-5). Hardness relies on high-dimensional Module Learning With Errors (M-LWE), which provides security margin Ω(2^256) even against quantum period-finding algorithms.
-            </div>
-          </div>
-        `;
-      } else if (queryLower.includes('ransomware') || queryLower.includes('malware') || queryLower.includes('isolate') || queryLower.includes('quarantine')) {
-        title = "RANSOMWARE & MALWARE RAPID ISOLATION";
-        responseHtml = `
-          <div class="space-y-1.5 text-xs">
-            <p>Ransomware deploys in-memory reflective DLLs and attempts fast volume shadow copy purging followed by multi-threaded cryptographic file locking.</p>
-            <div class="p-2.5 rounded-xl bg-vault-950 border border-rose-500/30 text-rose-300">
-              <strong>Kalki Kill-Switch:</strong> Autonomous micro-segmentation detects anomalous mass file entropy changes (>7.9 bits/byte on disk writes) and severs process network access in under 42ms, preserving immutable cloud-replicated snapshots.
-            </div>
-          </div>
-        `;
-      } else if (queryLower.includes('zero trust') || queryLower.includes('zerotrust')) {
-        title = "ZERO-TRUST COGNITIVE DEFENSE";
-        responseHtml = `
-          <div class="space-y-1.5 text-xs">
-            <p>Kalki operates under the strict mandate: <em>"Never Trust, Continually Attest"</em>. Every packet, microservice call, and administrative action requires continuous cryptographic attestation.</p>
-            <div>• Ingress: Mutual TLS 1.3 with hardware-bound certificates.</div>
-            <div>• Lateral: Ephemeral token leasing with 5-minute cryptographic expiration.</div>
-          </div>
-        `;
-      } else {
-        title = "TACTICAL DEFENSE ASSESSMENT";
-        responseHtml = `
-          <div class="space-y-1.5 text-xs">
-            <p>Query analyzed across Kalki Vault telemetry databases. Threat vector evaluated against 12 institutional risk classifications.</p>
-            <div class="text-vault-cyan">Autonomous recommendation: Maintain active zero-trust posture, inspect incoming telemetry on the Global Radar, and review the Kill Chain lifecycle.</div>
-          </div>
-        `;
+      copilotConversationHistory.push({ role: 'user', content: q });
+      if (copilotConversationHistory.length > 8) {
+        copilotConversationHistory = copilotConversationHistory.slice(-8);
       }
 
-      setTimeout(() => {
-        streamCopilotMessage(title, responseHtml);
-      }, 350);
+      const stream = document.getElementById('copilot-stream');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 text-slate-200 text-xs space-y-2 animate-fadeIn';
+      msgDiv.innerHTML = `
+        <div class="flex items-center justify-between text-[11px] font-bold text-purple-300 border-b border-purple-500/20 pb-1.5">
+          <span class="flex items-center gap-2">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-vault-cyan"></i>
+            <span>KALKI NEURAL COPILOT :: CLAUDE FABLE 5.1</span>
+          </span>
+          <span class="stream-status text-[9px] text-emerald-400 font-mono flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            SYNAPSE STREAMING
+          </span>
+        </div>
+        <div class="copilot-body text-slate-300 leading-relaxed font-mono whitespace-pre-wrap select-text text-[11px]"></div>
+      `;
+      stream.appendChild(msgDiv);
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+      stream.scrollTop = stream.scrollHeight;
+
+      const bodyEl = msgDiv.querySelector('.copilot-body');
+      const statusEl = msgDiv.querySelector('.stream-status');
+      let accumulatedText = '';
+
+      try {
+        const response = await fetch('/api/fable/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: copilotConversationHistory,
+            stream: true,
+            max_tokens: 350
+          })
+        });
+
+        if (!response.ok || !response.body) {
+          throw new Error('HTTP ' + response.status);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunkText = decoder.decode(value, { stream: true });
+          const lines = chunkText.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6).trim();
+              if (dataStr === '[DONE]') {
+                break;
+              }
+              try {
+                const parsed = JSON.parse(dataStr);
+                if (parsed.chunk) {
+                  accumulatedText += parsed.chunk;
+                  bodyEl.textContent = accumulatedText;
+                  stream.scrollTop = stream.scrollHeight;
+                } else if (parsed.error) {
+                  throw new Error(parsed.error);
+                }
+              } catch (parseErr) {
+                // Ignore json parsing artifacts
+              }
+            }
+          }
+        }
+
+        if (statusEl) {
+          statusEl.innerHTML = `<span class="text-emerald-400">✓ ATTESTED (CLAUDE FABLE 5.1)</span>`;
+        }
+        audio.playBlip(600, 0.03);
+        copilotConversationHistory.push({ role: 'assistant', content: accumulatedText });
+
+      } catch (err) {
+        console.warn('Fable 5.1 stream error or fallback:', err);
+        if (statusEl) {
+          statusEl.innerHTML = `<span class="text-vault-gold">LOCAL HEURISTIC ATTESTED</span>`;
+        }
+        const fallback = getCopilotLocalFallback(q);
+        bodyEl.textContent = fallback;
+        copilotConversationHistory.push({ role: 'assistant', content: fallback });
+      }
     }
 
     function appendCopilotUserMessage(msg) {
@@ -2198,8 +2247,7 @@ int kalki_filter(struct xdp_md *ctx) {
         <div class="text-slate-300 leading-normal">${contentHtml}</div>
       `;
       stream.appendChild(div);
-      stream.scrollTop = stream.scrollHeight;
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
       audio.playBlip(600, 0.03);
     }
 
@@ -2615,6 +2663,9 @@ int kalki_filter(struct xdp_md *ctx) {
 
     function selectBrainLobe(lobeKey) {
       selectedLobe = lobeKey;
+      if (window.cinematicDirector) {
+        window.cinematicDirector.focusLobe(lobeKey);
+      }
       audio.playBlip(600, 0.03);
       ['all', 'frontal', 'temporal', 'parietal', 'occipital', 'cerebellum', 'brainstem'].forEach(k => {
         const btn = document.getElementById('lobe-btn-' + k);
@@ -2647,6 +2698,9 @@ int kalki_filter(struct xdp_md *ctx) {
     }
 
     function triggerSynapticSurge() {
+      if (window.cinematicDirector) {
+        window.cinematicDirector.executeCinematicSurge();
+      }
       audio.playBlip(1200, 0.08);
       audio.playDrone(220, 0.4);
       for (let s = 0; s < 40; s++) {
@@ -2888,9 +2942,16 @@ int kalki_filter(struct xdp_md *ctx) {
         bCtx.shadowBlur = 0;
       }
 
-      requestAnimationFrame(renderProceduralBrain);
+      // Only loop if 3D viewport is inactive (fallback mode)
+      const vp = document.getElementById('cinematic-3d-viewport');
+      if (!vp || vp.children.length === 0) {
+        requestAnimationFrame(renderProceduralBrain);
+      }
     }
-    renderProceduralBrain();
+    const vpCheck = document.getElementById('cinematic-3d-viewport');
+    if (!vpCheck || vpCheck.children.length === 0) {
+      renderProceduralBrain();
+    }
 
     // G. GLOBAL CYBER ATTACK RADAR CANVAS & LIVE INCIDENT SIMULATOR
     const radarCanvas = document.getElementById('world-radar-canvas');
@@ -3242,9 +3303,9 @@ int kalki_filter(struct xdp_md *ctx) {
           triggerEmergencyAlert(v.id);
         };
         const isThreat = v.type === 'threat';
-        disc.className = `p-4 rounded-2xl bg-vault-950 border ${isThreat ? 'border-rose-500/40 hover:border-rose-400 hover:bg-rose-950/40' : 'border-sky-400/40 hover:border-sky-400 hover:bg-sky-950/40'} flex flex-col items-center justify-center gap-2 group transition-all duration-300 hover:scale-105 shadow-xl`;
+        disc.className = `p-4 rounded-2xl bg-vault-950 border ${isThreat ? 'border-rose-500/40 hover:border-rose-400 hover:bg-rose-950/40' : 'border-sky-400/40 hover:border-sky-400 hover:bg-sky-950/40'} flex flex-col items-center justify-center gap-2 group transition-colors duration-200 active:brightness-95 shadow-xl cursor-pointer`;
         disc.innerHTML = `
-          <div class="w-12 h-12 rounded-full ${isThreat ? 'bg-rose-500/20 text-rose-400' : 'bg-sky-400/20 text-sky-400'} flex items-center justify-center group-hover:scale-110 transition-transform">
+          <div class="w-12 h-12 rounded-full ${isThreat ? 'bg-rose-500/20 text-rose-400' : 'bg-sky-400/20 text-sky-400'} flex items-center justify-center transition-colors">
             <i data-lucide="${v.icon}" class="w-6 h-6"></i>
           </div>
           <span class="text-xs font-mono font-bold text-slate-100 group-hover:text-vault-cyan">${v.title}</span>
@@ -3254,12 +3315,290 @@ int kalki_filter(struct xdp_md *ctx) {
       });
 
       document.getElementById('rotational-threat-modal').classList.remove('hidden');
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
     }
 
     function closeRotationalThreatModal() {
       document.getElementById('rotational-threat-modal').classList.add('hidden');
     }
+
+    // K. MASTER THREAT VECTORS DATABASE & INTELLIGENCE MATRIX
+    const masterThreats = [
+      {
+        id: 'phishing',
+        title: 'Phishing & AitM Reverse-Proxy',
+        category: 'Identity & Access',
+        severity: 'CRITICAL',
+        riskScore: 94,
+        desc: 'Adversary-in-the-Middle reverse proxy lures capturing session cookies and bypassing SMS/App 2FA in real-time.',
+        steps: [
+          { num: 'STAGE 01: RECONNAISSANCE', desc: 'Adversary registers typosquatting domain resembling target brand with valid TLS certificate.' },
+          { num: 'STAGE 02: INGRESS VECTOR', desc: 'Spear-phishing lures dispatched via spoofed executive emails and urgency pretexting.' },
+          { num: 'STAGE 03: INTERCEPTION', desc: 'Proxy captures live session credentials and authenticated bearer cookies for immediate replay.' }
+        ],
+        mitigations: [
+          'Enforce hardware-bound FIDO2 / WebAuthn cryptographic passkeys immune to AitM relay',
+          'Deploy automated DMARC, DKIM, and SPF email authentication with quarantine/reject policies',
+          'Enable continuous AI-driven URL sandboxing and behavioral session anomaly detection'
+        ]
+      },
+      {
+        id: 'social-engineering',
+        title: 'Social Engineering & Pretexting',
+        category: 'Identity & Access',
+        severity: 'HIGH',
+        riskScore: 86,
+        desc: 'Psychological manipulation exploiting authority, urgency, or fear to coerce credential release or transaction rerouting.',
+        steps: [
+          { num: 'STAGE 01: OSINT MAPPING', desc: 'Reconnaissance across corporate hierarchy, reporting structures, and vendor relationships.' },
+          { num: 'STAGE 02: AUTHORITY PRETEXT', desc: 'Attacker impersonates legal, IT support, or executive leadership requesting urgent assistance.' },
+          { num: 'STAGE 03: COERCIVE EXPLOITATION', desc: 'Victim approves fraudulent MFA push challenge or initiates unauthorized fund transfer.' }
+        ],
+        mitigations: [
+          'Mandate strict dual-custody verification protocols for wire transfers and credential resets',
+          'Enforce number-matching MFA challenges to prevent push fatigue exploitation',
+          'Implement continuous red-team simulated phishing drills and security hygiene training'
+        ]
+      },
+      {
+        id: 'malware',
+        title: 'Polymorphic & Fileless Malware',
+        category: 'Payload & Malware',
+        severity: 'CRITICAL',
+        riskScore: 96,
+        desc: 'Dynamic in-memory shellcode execution evading traditional signature scans via reflective DLL injection and living-off-the-land binaries.',
+        steps: [
+          { num: 'STAGE 01: INITIAL DROP', desc: 'Malicious macro or staged download spawns living-off-the-land binary (certutil, powershell).' },
+          { num: 'STAGE 02: MEMORY INJECTION', desc: 'Payload unpacks directly into volatile memory (RAM) without writing executable binaries to disk.' },
+          { num: 'STAGE 03: C2 BEACONING', desc: 'Encrypted DNS/TLS tunnel established to command-and-control server for secondary stage execution.' }
+        ],
+        mitigations: [
+          'Deploy behavioral Endpoint Detection & Response (EDR) with kernel-level telemetry logging',
+          'Enforce PowerShell Constrained Language Mode and AMSI script block inspection',
+          'Implement strict Attack Surface Reduction (ASR) rules preventing unauthorized API process injection'
+        ]
+      },
+      {
+        id: 'identity-theft',
+        title: 'Identity ATO & Credential Stuffing',
+        category: 'Identity & Access',
+        severity: 'HIGH',
+        riskScore: 89,
+        desc: 'Distributed botnets replaying billions of stolen credentials across authentication endpoints to hijack consumer and corporate accounts.',
+        steps: [
+          { num: 'STAGE 01: COMPILATION', desc: 'Aggregating breach combos and dark web stealer logs into rotational credential lists.' },
+          { num: 'STAGE 02: DISTRIBUTED REPLAY', desc: 'Low-and-slow rotational residential proxy network fires concurrent auth requests at scale.' },
+          { num: 'STAGE 03: ACCOUNT TAKEOVER', desc: 'Successful hits are cataloged, exfiltrated, and weaponized for financial and lateral pivoting.' }
+        ],
+        mitigations: [
+          'Mandate passwordless biometric authentication and adaptive risk-based step-up MFA',
+          'Integrate real-time compromised credential intelligence feeds with automated password revocation',
+          'Implement aggressive rate limiting, TLS fingerprinting, and behavioral proof-of-work challenges'
+        ]
+      },
+      {
+        id: 'financial-fraud',
+        title: 'BEC & Fraudulent Wire Transfer',
+        category: 'Identity & Access',
+        severity: 'HIGH',
+        riskScore: 91,
+        desc: 'Business Email Compromise (BEC) intercepting vendor invoice chains to redirect high-value corporate capital into mule accounts.',
+        steps: [
+          { num: 'STAGE 01: INBOX SURVEILLANCE', desc: 'Attacker creates stealth email forwarding rules on compromised finance mailbox.' },
+          { num: 'STAGE 02: INVOICE HIJACK', desc: 'Legitimate supplier invoice intercepted and replaced with lookalike PDFs containing attacker IBAN.' },
+          { num: 'STAGE 03: FUND DISPERSAL', desc: 'Victim initiates wire transfer; capital is routed instantly through rapid crypto-mixing layers.' }
+        ],
+        mitigations: [
+          'Enforce strict out-of-band phone/video verification for all bank account or routing number changes',
+          'Audit and auto-purge unauthorized external mailbox forwarding and inbox delegate rules',
+          'Deploy automated financial transaction anomaly detection monitoring payment variances'
+        ]
+      },
+      {
+        id: 'web-exploits',
+        title: 'Web Application & API Exploits',
+        category: 'Infrastructure & Network',
+        severity: 'HIGH',
+        riskScore: 88,
+        desc: 'SQLi, Server-Side Request Forgery (SSRF), and broken object-level authorization (BOLA) compromising backend datastores.',
+        steps: [
+          { num: 'STAGE 01: API PROBING', desc: 'Automated fuzzing of undocumented API parameters and cloud metadata service endpoints.' },
+          { num: 'STAGE 02: PARAMETER INJECTION', desc: 'Crafted SSRF payloads target internal cloud IAM credentials via instance metadata (IMDSv1).' },
+          { num: 'STAGE 03: DATA EXTRACTION', desc: 'Extraction of sensitive customer tables and unauthorized elevation to cloud admin roles.' }
+        ],
+        mitigations: [
+          'Enforce Web Application Firewall (WAF) with OWASP Top 10 automated threat protection',
+          'Mandate IMDSv2 session tokens and strict egress filtering on cloud compute instances',
+          'Conduct automated SAST/DAST continuous security scans in all deployment pipelines'
+        ]
+      },
+      {
+        id: 'mobile-security',
+        title: 'Mobile Exploits & Malicious Profiles',
+        category: 'Identity & Access',
+        severity: 'ELEVATED',
+        riskScore: 82,
+        desc: 'Zero-click messaging vulnerabilities, rogue enterprise MDM profiles, and sideloaded surveillance trojans.',
+        steps: [
+          { num: 'STAGE 01: ZERO-CLICK DELIVERY', desc: 'Adversary transmits memory corruption exploit via message attachment parsing flaw.' },
+          { num: 'STAGE 02: SANDBOX ESCAPE', desc: 'Kernel exploit achieves root privileges, bypassing iOS/Android app sandbox isolation.' },
+          { num: 'STAGE 03: EXFILTRATION', desc: 'Continuous audio recording, GPS tracking, and interception of encrypted messaging apps.' }
+        ],
+        mitigations: [
+          'Deploy Enterprise Mobile Device Management (MDM) with real-time root/jailbreak detection',
+          'Prohibit sideloading of unverified enterprise certificates and developer profiles',
+          'Implement rapid zero-day OS patch rollout requirements across corporate mobile fleets'
+        ]
+      },
+      {
+        id: 'network-attacks',
+        title: 'Distributed Network & BGP Hijacking',
+        category: 'Infrastructure & Network',
+        severity: 'ELEVATED',
+        riskScore: 84,
+        desc: 'Volumetric multi-terabit amplification attacks and rogue BGP announcements blackholing critical edge infrastructure.',
+        steps: [
+          { num: 'STAGE 01: BOTNET COORDINATION', desc: 'Adversary marshals millions of compromised IoT edge devices via command-and-control.' },
+          { num: 'STAGE 02: ROUTE POISONING', desc: 'Malicious BGP route announcements divert upstream ISP traffic away from legitimate ASNs.' },
+          { num: 'STAGE 03: INFRASTRUCTURE SATURATION', desc: 'Volumetric UDP reflection floods overwhelm border gateway routers and stateful firewalls.' }
+        ],
+        mitigations: [
+          'Deploy Anycast routing architecture integrated with cloud DDoS scrubbing centers',
+          'Mandate Resource Public Key Infrastructure (RPKI) cryptographic route validation',
+          'Implement SYN cookies and connection rate limits at all boundary load balancers'
+        ]
+      },
+      {
+        id: 'cloud-security',
+        title: 'Cloud IAM & Misconfiguration Creep',
+        category: 'Infrastructure & Network',
+        severity: 'HIGH',
+        riskScore: 90,
+        desc: 'Over-privileged IAM roles, publicly accessible storage buckets, and unrotated long-lived API keys.',
+        steps: [
+          { num: 'STAGE 01: RECONNAISSANCE', desc: 'Scanning public code repositories for leaked AWS/GCP access tokens and private bucket URLs.' },
+          { num: 'STAGE 02: PRIVILEGE ESCALATION', desc: 'Leveraging wildcard (*) policies on assume-role permissions to pivot to organization root.' },
+          { num: 'STAGE 03: PERSISTENCE', desc: 'Spawning hidden administrative IAM access keys and spinning rogue GPU cryptominers.' }
+        ],
+        mitigations: [
+          'Enforce automated Least Privilege Access with automated IAM permission boundary pruning',
+          'Implement Cloud Security Posture Management (CSPM) with automated misconfiguration remediation',
+          'Enforce short-lived temporary STS credentials with mandatory MFA requirement'
+        ]
+      },
+      {
+        id: 'data-privacy',
+        title: 'Cryptographic Privacy & FIDO2 Hardening',
+        category: 'Identity & Access',
+        severity: 'HIGH',
+        riskScore: 85,
+        desc: 'Cryptographic protection preventing corporate data lakes from being breached or snooped in transit.',
+        steps: [
+          { num: 'STAGE 01: PASSIVE SNIFFING', desc: 'Attacker monitors unencrypted internal network links and cleartext API endpoints.' },
+          { num: 'STAGE 02: SESSION FORGERY', desc: 'Cryptographic weaknesses in weak token generation exploited for unauthorized privilege.' },
+          { num: 'STAGE 03: PRIVILEGE HARVEST', desc: 'Sensitive PII records decrypted and assembled for extortion or regulatory blackmail.' }
+        ],
+        mitigations: [
+          'Enforce end-to-end TLS 1.3 encryption with Post-Quantum Kyber key exchange',
+          'Implement field-level cryptographic tokenization for PII and sensitive datastores',
+          'Audit cryptographic libraries against NIST Post-Quantum Cryptography standards'
+        ]
+      },
+      {
+        id: 'ransomware',
+        title: 'Ransomware & Multi-Extortion APT',
+        category: 'Payload & Malware',
+        severity: 'CRITICAL',
+        riskScore: 98,
+        desc: 'Dual-extortion schemes combining military-grade cryptographic locking with confidential IP exfiltration.',
+        steps: [
+          { num: 'STAGE 01: INITIAL BREACH', desc: 'Initial Access Broker provides compromised VPN credentials to ransomware affiliate.' },
+          { num: 'STAGE 02: DATA EXFILTRATION', desc: 'Terabytes of confidential trade secrets and source code exfiltrated to dark web staging servers.' },
+          { num: 'STAGE 03: FLEET ENCRYPTION', desc: 'Volume Shadow Copies deleted (vssadmin); AES-256 batch encrypts hypervisors and storage pools.' }
+        ],
+        mitigations: [
+          'Maintain immutable air-gapped backups with hardware Write-Once-Read-Many (WORM) storage',
+          'Enforce micro-segmentation isolating management hypervisors from workstation subnets',
+          'Deploy automated canary file tripwires triggering immediate network-level host isolation'
+        ]
+      },
+      {
+        id: 'ai-attacks',
+        title: 'AI Adversarial & Deepfake Injection',
+        category: 'Next-Gen & AI',
+        severity: 'CRITICAL',
+        riskScore: 97,
+        desc: 'Generative AI voice/video synthesis for targeted CEO fraud, biometric spoofing, and LLM prompt injection.',
+        steps: [
+          { num: 'STAGE 01: VOICE MODELING', desc: 'Few-shot audio training from public executive keynote speeches to generate cloned voice.' },
+          { num: 'STAGE 02: REAL-TIME INJECTION', desc: 'Synthesized voice injected into authorized conference call commanding urgent wire reroute.' },
+          { num: 'STAGE 03: ADVERSARIAL EVASION', desc: 'Automated jailbreak payloads bypass enterprise LLM security guardrails and access internals.' }
+        ],
+        mitigations: [
+          'Require cryptographic challenge-response protocols for all high-value verbal authorizations',
+          'Deploy multi-spectral audio analysis detecting synthetic generative AI voice artifacts',
+          'Implement strict sandboxing and parameterized input guardrails on all enterprise LLM agents'
+        ]
+      }
+    ];
+
+    function filterThreats(category) {
+      if (typeof audio !== 'undefined' && audio.playBlip) audio.playBlip(700, 0.03);
+      document.querySelectorAll('.threat-filter-btn').forEach(btn => {
+        const cat = btn.getAttribute('data-cat');
+        if (cat === category) {
+          btn.className = 'threat-filter-btn px-4 py-2 rounded-xl text-xs font-mono transition-all bg-vault-cyan text-vault-950 font-bold shadow-lg shadow-vault-cyan/25';
+        } else {
+          btn.className = 'threat-filter-btn px-4 py-2 rounded-xl text-xs font-mono transition-all bg-vault-900/80 border border-white/10 text-slate-400 hover:text-slate-200';
+        }
+      });
+      renderThreatGrid(category);
+    }
+
+    function renderThreatGrid(category = 'All') {
+      const grid = document.getElementById('threat-cards-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const filtered = category === 'All'
+        ? masterThreats
+        : masterThreats.filter(t => t.category === category);
+
+      filtered.forEach(t => {
+        const card = document.createElement('div');
+        const isCritical = t.severity === 'CRITICAL';
+        card.className = 'p-6 rounded-2xl bg-vault-900/80 border border-white/10 hover:border-vault-cyan/60 transition-colors flex flex-col justify-between group shadow-lg';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-[10px] font-mono px-2.5 py-1 rounded-full ${isCritical ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'} font-bold">
+                ${t.severity} • RISK ${t.riskScore}%
+              </span>
+              <span class="text-[10px] font-mono text-slate-500">${t.category}</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-100 group-hover:text-vault-cyan transition-colors mb-2">${t.title}</h3>
+            <p class="text-xs text-slate-400 leading-relaxed mb-4">${t.desc}</p>
+          </div>
+          <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+            <button onclick="triggerEmergencyAlert('${t.id}')" class="px-3.5 py-1.5 rounded-xl bg-vault-800 hover:bg-vault-cyan hover:text-vault-950 text-vault-cyan text-xs font-mono font-bold transition-colors flex items-center gap-1.5 cursor-pointer">
+              <span>ANALYZE VECTOR</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+            <span class="text-[10px] font-mono text-slate-500">3 DEFENSE STEPS</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
+    }
+
+    // Call renderThreatGrid on startup
+    renderThreatGrid('All');
 
     // L. EMERGENCY THREAT INTERCEPT & LIVE RISK REDUCTION ENGINE
     let currentAlertThreat = null;
@@ -3307,9 +3646,10 @@ int kalki_filter(struct xdp_md *ctx) {
       document.getElementById('alert-danger-state').classList.remove('hidden');
       document.getElementById('alert-safe-state').classList.add('hidden');
       document.getElementById('danger-ambient-flash').classList.remove('hidden');
-      document.getElementById('emergency-modal-card').className = 'relative w-full max-w-4xl rounded-3xl bg-vault-900 border-2 danger-blinking-border shadow-2xl p-6 sm:p-8 max-h-[92vh] overflow-y-auto z-10';
+      const emCard = document.getElementById('emergency-modal-card');
+      if (emCard) emCard.className = 'relative w-full max-w-4xl rounded-3xl bg-vault-900 border-2 danger-blinking-border shadow-2xl p-6 sm:p-8 max-h-[92vh] overflow-y-auto z-10';
       document.getElementById('emergency-alert-modal').classList.remove('hidden');
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
     }
 
     function toggleMitigationStep(idx) {
@@ -3377,7 +3717,7 @@ int kalki_filter(struct xdp_md *ctx) {
       if (currentAlertThreat) {
         document.getElementById('safe-confirmation-text').innerText = `All defense protocols for ${currentAlertThreat.title} have been deployed and verified. Your perimeter has achieved 100% cryptographic shielding.`;
       }
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
     }
 
     function closeEmergencyAlert() {
@@ -3424,7 +3764,7 @@ int kalki_filter(struct xdp_md *ctx) {
         });
       }
       dropdown.classList.remove('hidden');
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
     }
 
     // N. 7-STAGE ATTACK KILL CHAIN
@@ -3446,8 +3786,8 @@ int kalki_filter(struct xdp_md *ctx) {
         const btn = document.createElement('button');
         const isAct = activeKc === idx;
         btn.className = isAct
-          ? 'p-3.5 rounded-2xl border text-left transition-all bg-vault-850 border-vault-cyan shadow-lg shadow-vault-cyan/20 scale-[1.03]'
-          : 'p-3.5 rounded-2xl border text-left transition-all bg-vault-900/60 border-white/10 hover:border-white/20';
+          ? 'p-3.5 rounded-2xl border text-left transition-colors bg-vault-850 border-vault-cyan shadow-lg shadow-vault-cyan/20 ring-1 ring-vault-cyan/30 cursor-pointer'
+          : 'p-3.5 rounded-2xl border text-left transition-colors bg-vault-900/60 border-white/10 hover:border-white/20 hover:bg-vault-900 cursor-pointer';
         btn.innerHTML = `
           <div class="flex items-center justify-between mb-2">
             <span class="text-[11px] font-mono text-slate-500">${s.num}</span>
@@ -3468,7 +3808,7 @@ int kalki_filter(struct xdp_md *ctx) {
       document.getElementById('kc-signal-text').innerText = curr.signal;
       document.getElementById('kc-prev-btn').disabled = activeKc === 0;
       document.getElementById('kc-next-btn').disabled = activeKc === kcStages.length - 1;
-      lucide.createIcons();
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
     }
 
     function setKcStage(idx) { activeKc = idx; renderKillChain(); }
@@ -3485,7 +3825,7 @@ int kalki_filter(struct xdp_md *ctx) {
     }
     renderKillChain();
 
-    lucide.createIcons();
+    if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
 
     // ═══════════════════════════════════════════════════════════════
     // ADVANCED ANIMATION ENGINE — CYBER DEFENSE GRADE
@@ -3583,30 +3923,6 @@ int kalki_filter(struct xdp_md *ctx) {
       animateCursor();
     })();
 
-    // 3. CLICK RIPPLE EFFECT ON BUTTONS
-    (function initRippleEffect() {
-      document.addEventListener('click', e => {
-        const target = e.target.closest('button, .tilt-card');
-        if (!target) return;
-
-        const rect = target.getBoundingClientRect();
-        const ripple = document.createElement('span');
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-        ripple.className = 'ripple';
-
-        // Ensure parent has relative + overflow:hidden
-        if (getComputedStyle(target).position === 'static') {
-          target.style.position = 'relative';
-        }
-        target.style.overflow = 'hidden';
-        target.appendChild(ripple);
-
-        setTimeout(() => ripple.remove(), 700);
-      });
-    })();
 
     // 4. PARALLAX MOUSE MOVEMENT ON HERO BLOBS
     (function initParallax() {
@@ -3663,11 +3979,11 @@ int kalki_filter(struct xdp_md *ctx) {
           const centerY = rect.height / 2;
           const rotateX = (y - centerY) / centerY * -6;
           const rotateY = (x - centerX) / centerX * 6;
-          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
 
         card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale(1)';
+          card.style.transform = 'perspective(800px) rotateX(0) rotateY(0)';
         });
       });
     })();

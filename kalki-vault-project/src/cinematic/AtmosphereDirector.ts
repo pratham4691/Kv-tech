@@ -30,11 +30,11 @@ export class AtmosphereDirector {
 
   private setupLighting() {
     // 1. Ambient soft environmental base
-    this.ambientLight = new THREE.AmbientLight(0x040a18, 1.2);
+    this.ambientLight = new THREE.AmbientLight(0x040a18, 2.5);
     this.group.add(this.ambientLight);
 
     // 2. Strong Rim/Backlight (cyan)
-    this.keyRimLight = new THREE.DirectionalLight(0x00f0ff, 3.2);
+    this.keyRimLight = new THREE.DirectionalLight(0x00f0ff, 5.0);
     this.keyRimLight.position.set(2, 4, -4);
     this.group.add(this.keyRimLight);
 
@@ -55,55 +55,20 @@ export class AtmosphereDirector {
   }
 
   private setupAtmosphericFog() {
-    this.scene.fog = new THREE.FogExp2(0x020409, 0.038);
+    this.scene.fog = new THREE.FogExp2(0x020409, 0.015);
   }
 
   private setupVolumetricBeam() {
-    const coneGeo = new THREE.ConeGeometry(3.5, 12, 32, 1, true);
-    coneGeo.translate(0, -6, 0);
-    coneGeo.rotateX(Math.PI / 4);
-
-    const beamMat = new THREE.ShaderMaterial({
-      uniforms: {
-        uColor: { value: new THREE.Color('#00f0ff') },
-        uIntensity: { value: 0.12 },
-      },
-      vertexShader: `
-        varying vec3 vNormal;
-        varying vec2 vUv;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 uColor;
-        uniform float uIntensity;
-        varying vec3 vNormal;
-        varying vec2 vUv;
-        void main() {
-          float fade = (1.0 - vUv.y) * 0.7;
-          float rim = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
-          gl_FragColor = vec4(uColor, fade * rim * uIntensity);
-        }
-      `,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-    });
-
-    this.lightBeamMesh = new THREE.Mesh(coneGeo, beamMat);
-    this.lightBeamMesh.position.set(2, 6, -3);
-    this.group.add(this.lightBeamMesh);
+    // Volumetric beam disabled to prevent hazy artifacts around the anatomical brain
   }
 
   public setColorGrade(colorHex: string) {
     const col = new THREE.Color(colorHex);
     this.keyRimLight.color.lerp(col, 0.8);
     this.orbitPointLight.color.lerp(col, 0.9);
-    (this.lightBeamMesh.material as THREE.ShaderMaterial).uniforms.uColor.value.lerp(col, 0.8);
+    if (this.lightBeamMesh) {
+      (this.lightBeamMesh.material as THREE.ShaderMaterial).uniforms.uColor.value.lerp(col, 0.8);
+    }
   }
 
   public triggerLightningFlash() {
@@ -133,7 +98,9 @@ export class AtmosphereDirector {
     this.orbitPointLight.position.z = Math.cos(time * 0.6) * 3.2;
 
     // 2. Slow volumetric light beam drift
-    this.lightBeamMesh.rotation.y = time * 0.04;
+    if (this.lightBeamMesh) {
+      this.lightBeamMesh.rotation.y = time * 0.04;
+    }
 
     // 3. Periodic controlled lightning flash (every 18-25 seconds)
     this.lightningTimer += delta;
