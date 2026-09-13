@@ -28,16 +28,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install dependencies
+        working-directory: kalki-vault-project
         run: npm ci
 
       - name: Build project
+        working-directory: kalki-vault-project
         run: npm run build
 
       - name: Ensure CNAME exists in dist
-        run: echo "incredia.in" > dist/CNAME
+        run: echo "incredia.in" > kalki-vault-project/dist/CNAME
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -45,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: 'kalki-vault-project/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
