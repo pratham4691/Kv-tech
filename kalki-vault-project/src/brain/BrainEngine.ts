@@ -66,6 +66,8 @@ export class BrainEngine {
 
   private leftWireMesh!: THREE.Mesh;
   private rightWireMesh!: THREE.Mesh;
+  private cerebellumWireMesh!: THREE.Mesh;
+  private brainstemWireMesh!: THREE.Mesh;
 
   private haloMesh!: THREE.Mesh;
   private contactReticleGroup!: THREE.Group;
@@ -94,7 +96,7 @@ export class BrainEngine {
   private surgeIntensity = 0;
   private surgeCallback?: (stage: string, intensity: number) => void;
 
-  // Authenticated Sovereign Cyber-Biological Lobe Palette (all < 1.0)
+  // Sovereign Cyber-Biological Lobe Palette
   public readonly LOBE_PALETTES: Record<AnatomicalLobe, THREE.Color> = {
     all:         new THREE.Color(0.0, 0.88, 0.97),   // Cyan
     frontal:     new THREE.Color(0.0, 0.88, 0.97),   // Cyan  — AI Core
@@ -111,7 +113,7 @@ export class BrainEngine {
     private perf: PerformanceDirector
   ) {
     this.group = new THREE.Group();
-    this.group.position.set(0, 0.08, 0);
+    this.group.position.set(0, 0.06, 0);
     this.scene.add(this.group);
     this.pulseTexture = createSoftPulseTexture();
 
@@ -124,43 +126,43 @@ export class BrainEngine {
   }
 
   /**
-   * Dramatic volumetric scene lighting for wet cortical tissue & bioluminescent sulci
+   * Dramatic volumetric scene lighting tailored to highlight biological gyri,
+   * sulcal valleys, and translucent cybernetic neural tissue.
    */
   private setupVolumetricLights() {
     // Ambient bioluminescent deep-ocean base
-    const amb = new THREE.AmbientLight(0x04111e, 2.8);
+    const amb = new THREE.AmbientLight(0x041022, 3.0);
     this.group.add(amb);
 
-    // Primary key: cyan top-front fill
-    const key = new THREE.PointLight(0x00d4ff, 12.0, 16);
-    key.position.set(1.2, 3.2, 4.0);
+    // Primary key: brilliant cyan top-front directional light
+    const key = new THREE.DirectionalLight(0x00d4ff, 4.2);
+    key.position.set(2.5, 4.0, 3.5);
     this.group.add(key);
 
-    // Hot orange-gold under-rim for anatomical depth
-    const under = new THREE.PointLight(0xff7e00, 5.5, 12);
-    under.position.set(-0.5, -2.8, 2.5);
-    this.group.add(under);
+    // Lateral fill: warm amber accent sculpting right hemisphere gyri
+    const fill = new THREE.DirectionalLight(0xf59e0b, 2.0);
+    fill.position.set(3.5, -0.5, 1.5);
+    this.group.add(fill);
 
-    // Cool violet posterior rim — sculpts brain silhouette
-    const rim = new THREE.PointLight(0xa855f7, 7.5, 14);
-    rim.position.set(-2.5, -1.2, -3.5);
+    // Posterior rim: violet edge light defining occipital & parietal silhouette
+    const rim = new THREE.DirectionalLight(0xa855f7, 3.6);
+    rim.position.set(-2.8, 1.5, -3.8);
     this.group.add(rim);
 
-    // Warm golden lateral fill (right hemisphere detail)
-    const fill = new THREE.PointLight(0xf59e0b, 4.0, 10);
-    fill.position.set(3.5, 0.8, -1.0);
-    this.group.add(fill);
+    // Under-light: emerald glow from brainstem base
+    const under = new THREE.PointLight(0x10b981, 4.5, 6.0);
+    under.position.set(0, -1.2, -0.2);
+    this.group.add(under);
   }
 
   /**
-   * Sculpts high-resolution anatomically-correct cerebral cortex hemispheres.
-   * Uses a base ovoid (not a sphere) shaped like a real cerebrum,
-   * then adds multi-frequency harmonic gyri/sulci displacement.
+   * Sculpts complete, watertight, volumetric 3D cerebral hemispheres with authentic
+   * multi-frequency gyri and sulci convolutions.
    */
   private buildCorticalSurfaces() {
-    const createHemisphereGeo = (isLeft: boolean) => {
-      const uSegs = 72;
-      const vSegs = 72;
+    const createAnatomicalHemisphereGeo = (isLeft: boolean) => {
+      const uSegs = 84;
+      const vSegs = 84;
       const positions: number[] = [];
       const normals: number[] = [];
       const uvs: number[] = [];
@@ -168,84 +170,144 @@ export class BrainEngine {
 
       const side = isLeft ? -1 : 1;
 
+      // Base anatomical semi-axes (proportions of real human cerebrum)
+      const rx = 0.94;  // lateral semi-axis
+      const ry = 0.86;  // vertical semi-axis
+      const rz = 1.30;  // anterior-posterior semi-axis
+
       for (let j = 0; j <= vSegs; j++) {
-        const vn = j / vSegs;           // 0 = crown, 1 = inferior
-        const theta = vn * Math.PI * 0.95;
+        const vn = j / vSegs;
+        const theta = vn * Math.PI; // 0 (top crown) to π (inferior base)
+        const sinT = Math.sin(theta);
+        const cosT = Math.cos(theta);
 
         for (let i = 0; i <= uSegs; i++) {
-          const un = i / uSegs;          // 0 = medial, 1 = lateral
-          const phi = un * Math.PI;      // 0..π half-dome
-
-          const sinT = Math.sin(theta);
-          const cosT = Math.cos(theta);
+          const un = i / uSegs;
+          const phi = un * Math.PI * 2.0; // 0 to 2π full circle around Y
           const sinP = Math.sin(phi);
           const cosP = Math.cos(phi);
 
-          // Base ellipsoid anatomical radii — wider (X) than tall (Y), long A-P (Z)
-          const rx = 1.02;   // lateral semi-axis
-          const ry = 0.88;   // vertical semi-axis
-          const rz = 1.36;   // anterior-posterior semi-axis
+          // Unit sphere coordinate
+          const px = sinT * cosP;
+          const py = cosT;
+          const pz = sinT * sinP;
 
-          // Build position on ellipsoid hemisphere (lateral half only)
-          let bx = side * Math.abs(cosP * sinT) * rx;
-          let by = cosT * ry;
-          let bz = sinP * sinT * rz;
+          // ── HEMISPHERE LATERAL/MEDIAL ASYMMETRY ────────────────────────────
+          // When px <= 0: lateral rounded dome.
+          // When px > 0: flat medial face bordering the sagittal longitudinal fissure.
+          const xLat = side * (0.048 + Math.abs(px) * rx);
+          const xMed = side * (0.048 + px * 0.075);
+          
+          // Smooth, seamless blend between medial wall and lateral cortex
+          const blend = 0.5 + 0.5 * Math.tanh(px * 7.5);
+          let bx = xLat * (1.0 - blend) + xMed * blend;
+          let by = py * ry;
+          let bz = pz * rz;
 
-          // Medial wall gap — sagittal longitudinal fissure
-          const medialFade = THREE.MathUtils.smoothstep(Math.abs(bx / rx), 0.04, 0.22);
-          bx = side * (Math.abs(bx) * medialFade + 0.08);
+          const zNorm = bz / rz; // -1 (occipital) to +1 (frontal)
 
-          // Anterior/frontal pole — round the forehead
-          const zNorm = bz / rz;  // -1 occipital .. +1 frontal
-          if (zNorm > 0.55) {
-            const taper = 1.0 - (zNorm - 0.55) * 0.35;
-            bx *= taper;
-            by *= taper * 0.92;
+          // ── FRONTAL LOBE SCULPTING (zNorm > 0.35) ──────────────────────────
+          if (zNorm > 0.35) {
+            const fSpan = (zNorm - 0.35) / 0.65;
+            const fTaper = 1.0 - fSpan * 0.24;
+            bx *= fTaper;
+            // Orbital surface curves upward to make space for facial cavity
+            if (by < 0.10) {
+              by *= (1.0 - fSpan * 0.36);
+            }
+            if (zNorm > 0.70) {
+              bx *= (1.0 - (zNorm - 0.70) * 0.16);
+            }
           }
 
-          // Temporal lobe inferior protrusion & Sylvian fissure indentation
-          const isTemporal = zNorm > -0.35 && zNorm < 0.55 && by < 0.18 && Math.abs(bx) > 0.40;
+          // ── OCCIPITAL LOBE SCULPTING (zNorm < -0.30) ───────────────────────
+          if (zNorm < -0.30) {
+            const oSpan = (-zNorm - 0.30) / 0.70;
+            const oTaper = 1.0 - oSpan * 0.20;
+            bx *= oTaper;
+            // Occipital pole slopes upward, forming the cerebellar notch
+            if (by < 0.18) {
+              by += oSpan * 0.22 * (1.0 - Math.abs(px) * 0.35);
+            }
+          }
+
+          // ── TEMPORAL LOBE INFERIOR LATERAL BULGE ──────────────────────────
+          // Characteristic downward and lateral flare below the lateral fissure
+          const isTemporal = px < -0.18 && by < 0.14 && zNorm > -0.42 && zNorm < 0.44;
           if (isTemporal) {
-            by -= 0.12 * sinP;
-            bx *= 1.10;
+            const tFactor = Math.sin((zNorm + 0.42) / 0.86 * Math.PI) * Math.abs(px);
+            by -= tFactor * 0.15;
+            bx += side * tFactor * 0.14;
           }
 
-          // Occipital pole taper downward
-          if (zNorm < -0.50 && by < 0.16) {
-            by += (zNorm + 0.50) * 0.22;
+          // ── SYLVIAN / LATERAL FISSURE INDENTATION ─────────────────────────
+          if (px < -0.22 && zNorm > -0.36 && zNorm < 0.50) {
+            const sylvY = -0.04 + zNorm * 0.16;
+            const distSylv = Math.abs(by - sylvY);
+            if (distSylv < 0.13) {
+              const depth = (1.0 - distSylv / 0.13) * 0.082 * Math.abs(px);
+              bx -= side * depth;
+              by += (by > sylvY ? 0.015 : -0.015) * depth;
+            }
           }
 
-          // ── GYRI & SULCI DISPLACEMENT ──────────────────────────────────────
-          // Primary anatomical sulci:
-          // Central sulcus (anterior motor | posterior somatosensory divide)
-          const centralSulcus = Math.sin((zNorm * 3.2 - vn * 2.4) * Math.PI) * 0.042;
-          // Sylvian (lateral) fissure groove
-          const sylvianFissure = (isTemporal ? -0.065 : 0.0) * Math.abs(sinP);
+          // ── CENTRAL SULCUS GROOVE ─────────────────────────────────────────
+          if (px < -0.16 && by > 0.04) {
+            const csZ = 0.08 - (by / ry) * 0.22;
+            const distCS = Math.abs(bz - csZ);
+            if (distCS < 0.11) {
+              const depthCS = (1.0 - distCS / 0.11) * 0.062;
+              bx -= side * depthCS * 0.65;
+              by -= depthCS * 0.35;
+            }
+          }
 
-          // Secondary/tertiary multi-octave gyral folding
-          const g1 = Math.sin(un * 18 + vn * 15 + side * 0.8) * 0.052;
-          const g2 = Math.cos(vn * 26 - un * 13 + side * 1.4) * 0.036;
-          const g3 = Math.sin(un * 40 + vn * 29) * 0.018;
-          const g4 = Math.cos(un * 58 - vn * 44) * 0.010;
-          const gyri = g1 + g2 + g3 + g4 + centralSulcus + sylvianFissure;
+          // ── CONTINUOUS 3D SERPENTINE GYRI & SULCI CONVOLUTIONS ────────────
+          // Keep medial wall clean, displace lateral/superior cortical surface
+          const latWeight = THREE.MathUtils.smoothstep(Math.abs(bx), 0.08, 0.40);
 
-          // Displace outward along surface normal estimate
-          const nx = side * sinP * sinT;
-          const ny = cosT;
-          const nz = cosP * sinT;
-          const nLen = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1.0;
+          const kx = bx * 3.4;
+          const ky = by * 3.8;
+          const kz = bz * 3.2;
 
-          const x = bx + (nx / nLen) * gyri * 0.9;
-          const y = by + (ny / nLen) * gyri * 0.85;
-          const z = bz + (nz / nLen) * gyri * 0.7;
+          // Domain warping produces undulating, serpentine biological ribbon turns
+          const qx = kx + 0.38 * Math.sin(ky * 1.6 + kz * 1.2 + (isLeft ? 0.6 : -0.6));
+          const qy = ky + 0.38 * Math.sin(kz * 1.5 + kx * 1.3);
+          const qz = kz + 0.38 * Math.cos(kx * 1.5 + ky * 1.4);
+
+          const g1 = Math.sin(qx * 2.3 + qy * 1.9);
+          const g2 = Math.cos(qy * 2.5 - qz * 2.2);
+          const g3 = Math.sin(qz * 2.9 + qx * 2.0);
+          const g4 = Math.cos(qx * 4.4 + qy * 3.8 + qz * 3.6) * 0.32;
+          const g5 = Math.sin(qx * 7.2 - qy * 6.6 + qz * 5.0) * 0.14;
+
+          const rawGyri = (g1 + g2 + g3 + g4 + g5) / 2.3;
+
+          // Ridge transform: wide rounded gyral crowns separated by deep narrow sulcal crevices
+          const gyriDisp = (1.0 - Math.pow(Math.abs(rawGyri), 1.30)) * 0.075 - 0.022;
+
+          // Outward displacement direction from hemisphere center
+          const cX = side * 0.52;
+          const cY = 0.06;
+          const cZ = 0.0;
+          let nx = bx - cX;
+          let ny = by - cY;
+          let nz = bz - cZ;
+          const nlen = Math.hypot(nx, ny, nz) || 1.0;
+          nx /= nlen; ny /= nlen; nz /= nlen;
+
+          const finalDisp = gyriDisp * latWeight;
+          const x = bx + nx * finalDisp;
+          const y = by + ny * finalDisp;
+          const z = bz + nz * finalDisp;
 
           positions.push(x, y, z);
-          normals.push(0, 1, 0); // recomputed below
+          normals.push(nx, ny, nz);
           uvs.push(un, vn);
         }
       }
 
-      // Quad face winding
+      // Standard sphere quad winding indices
       for (let j = 0; j < vSegs; j++) {
         for (let i = 0; i < uSegs; i++) {
           const a = j * (uSegs + 1) + i;
@@ -253,11 +315,11 @@ export class BrainEngine {
           const c = (j + 1) * (uSegs + 1) + i;
           const d = c + 1;
           if (isLeft) {
-            indices.push(a, c, b);
-            indices.push(b, c, d);
-          } else {
             indices.push(a, b, c);
             indices.push(b, d, c);
+          } else {
+            indices.push(a, c, b);
+            indices.push(b, c, d);
           }
         }
       }
@@ -271,177 +333,196 @@ export class BrainEngine {
       return geo;
     };
 
-    // ── PBR Wet-Tissue Cortex Material ──────────────────────────────────────
-    const makeCorMat = (tintHex: number, emHex: number) => new THREE.MeshPhysicalMaterial({
-      color:               new THREE.Color(tintHex),
+    // ── Ultra-Premium PBR Cybernetic Cortical Tissue Material ───────────────
+    const makeCorticalMat = (baseHex: number, emHex: number) => new THREE.MeshPhysicalMaterial({
+      color:               new THREE.Color(baseHex),
       emissive:            new THREE.Color(emHex),
-      emissiveIntensity:   0.55,
-      roughness:           0.28,
-      metalness:           0.12,
-      clearcoat:           0.90,
-      clearcoatRoughness:  0.18,
-      transmission:        0.22,
+      emissiveIntensity:   0.65,
+      roughness:           0.22,
+      metalness:           0.16,
+      clearcoat:           1.0,
+      clearcoatRoughness:  0.10,
+      transmission:        0.24,
       transparent:         true,
-      opacity:             0.93,
-      side:                THREE.FrontSide,
+      opacity:             0.95,
+      side:                THREE.DoubleSide,
     });
 
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x00d4ff,
+    const makeWireMat = (colorHex: number, opacity = 0.14) => new THREE.MeshBasicMaterial({
+      color: colorHex,
       wireframe: true,
       transparent: true,
-      opacity: 0.09,
+      opacity,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
 
-    // Left Hemisphere
-    const leftGeo = createHemisphereGeo(true);
-    this.leftHemisphereMesh = new THREE.Mesh(leftGeo, makeCorMat(0x031628, 0x001a36));
-    this.leftWireMesh        = new THREE.Mesh(leftGeo, wireMat);
+    // Left Hemisphere (Volumetric Watertight 3D Solid)
+    const leftGeo = createAnatomicalHemisphereGeo(true);
+    this.leftHemisphereMesh = new THREE.Mesh(leftGeo, makeCorticalMat(0x021124, 0x00264d));
+    this.leftWireMesh        = new THREE.Mesh(leftGeo, makeWireMat(0x00d4ff, 0.15));
     this.group.add(this.leftHemisphereMesh);
     this.group.add(this.leftWireMesh);
 
-    // Right Hemisphere
-    const rightGeo = createHemisphereGeo(false);
-    this.rightHemisphereMesh = new THREE.Mesh(rightGeo, makeCorMat(0x031628, 0x001a36));
-    this.rightWireMesh       = new THREE.Mesh(rightGeo, wireMat.clone());
+    // Right Hemisphere (Volumetric Watertight 3D Solid)
+    const rightGeo = createAnatomicalHemisphereGeo(false);
+    this.rightHemisphereMesh = new THREE.Mesh(rightGeo, makeCorticalMat(0x021124, 0x00264d));
+    this.rightWireMesh       = new THREE.Mesh(rightGeo, makeWireMat(0x00d4ff, 0.15));
     this.group.add(this.rightHemisphereMesh);
     this.group.add(this.rightWireMesh);
 
-    // ── Cerebellum — bilateral lobes with fine horizontal folia ─────────────
-    const cerGeo = new THREE.SphereGeometry(0.54, 40, 30);
-    cerGeo.scale(1.32, 0.62, 0.82);
+    // ── Cerebellum — Bilateral lobes with dense horizontal folia ridges ─────
+    const cerGeo = new THREE.SphereGeometry(0.58, 48, 36);
+    cerGeo.scale(1.24, 0.58, 0.76);
     const cerPos = cerGeo.attributes.position;
     for (let i = 0; i < cerPos.count; i++) {
-      const py = cerPos.getY(i);
       const px = cerPos.getX(i);
-      // Horizontal folia — fine biological ridges
-      const folia = Math.sin(py * 42.0) * 0.020 + Math.cos(px * 18.0) * 0.012;
+      const py = cerPos.getY(i);
+      const pz = cerPos.getZ(i);
+      // Twin cerebellar hemisphere indentation at vermis (px = 0)
+      const vermisDepression = (1.0 - Math.exp(-Math.pow(px * 4.5, 2))) * 1.0;
+      // Dense horizontal folia (anatomical parallel cerebellar cortex ridges)
+      const folia = Math.sin(py * 52.0) * 0.018 + Math.cos(px * 24.0) * 0.008;
       cerPos.setY(i, py + folia);
+      cerPos.setX(i, px * (0.85 + vermisDepression * 0.15));
     }
     cerGeo.computeVertexNormals();
 
     this.cerebellumMesh = new THREE.Mesh(cerGeo, new THREE.MeshPhysicalMaterial({
-      color:             new THREE.Color(0x140614),
-      emissive:          new THREE.Color(0x2a0518),
+      color:             new THREE.Color(0x1a0414),
+      emissive:          new THREE.Color(0x400624),
       emissiveIntensity: 0.70,
-      roughness:         0.35,
-      metalness:         0.10,
-      clearcoat:         0.80,
-      clearcoatRoughness:0.22,
+      roughness:         0.28,
+      metalness:         0.14,
+      clearcoat:         0.90,
+      clearcoatRoughness:0.15,
       transparent:       true,
-      opacity:           0.92,
+      opacity:           0.94,
+      side:              THREE.DoubleSide,
     }));
-    this.cerebellumMesh.position.set(0, -0.52, -0.78);
+    this.cerebellumMesh.position.set(0, -0.48, -0.74);
     this.group.add(this.cerebellumMesh);
 
-    // Crimson cerebellar wireframe
-    const cerWire = new THREE.Mesh(cerGeo, new THREE.MeshBasicMaterial({
-      color: 0xff0055, wireframe: true, transparent: true,
-      opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
-    cerWire.position.copy(this.cerebellumMesh.position);
-    this.group.add(cerWire);
+    this.cerebellumWireMesh = new THREE.Mesh(cerGeo, makeWireMat(0xff0055, 0.20));
+    this.cerebellumWireMesh.position.copy(this.cerebellumMesh.position);
+    this.group.add(this.cerebellumWireMesh);
 
-    // ── Brainstem — pons bulge + medulla column ───────────────────────────
-    const stemGeo = new THREE.CylinderGeometry(0.18, 0.11, 1.20, 22, 22);
+    // ── Brainstem & Pons — Ascending stalk with prominent pons bulge ────────
+    const stemGeo = new THREE.CylinderGeometry(0.18, 0.12, 1.15, 28, 28);
     const stemPos = stemGeo.attributes.position;
     for (let i = 0; i < stemPos.count; i++) {
       const sy = stemPos.getY(i);
-      const sAngle = Math.atan2(stemPos.getZ(i), stemPos.getX(i));
-      const isPons = sy > 0.05 && sy < 0.42;
-      const swell = isPons ? Math.sin(((sy - 0.05) / 0.37) * Math.PI) * 0.075 : 0;
-      const striation = Math.sin(sAngle * 14.0) * 0.010;
-      const rad = Math.hypot(stemPos.getX(i), stemPos.getZ(i)) + swell + striation;
+      const sx = stemPos.getX(i);
+      const sz = stemPos.getZ(i);
+      const sAngle = Math.atan2(sz, sx);
+
+      // Anterior Pons swelling between y = 0.05 and 0.45
+      const isPons = sy > 0.02 && sy < 0.44;
+      const ponsSwell = isPons ? Math.sin(((sy - 0.02) / 0.42) * Math.PI) * 0.085 : 0;
+      // Anterior bias (pons protrudes forward in front of brainstem)
+      const forwardBias = isPons ? Math.max(0, Math.sin(sAngle)) * 0.06 : 0;
+      // Vertical corticospinal tract fiber striations
+      const striation = Math.sin(sAngle * 16.0) * 0.008;
+
+      const rad = Math.hypot(sx, sz) + ponsSwell + striation;
       stemPos.setX(i, Math.cos(sAngle) * rad);
-      stemPos.setZ(i, Math.sin(sAngle) * rad);
+      stemPos.setZ(i, Math.sin(sAngle) * rad + forwardBias);
     }
     stemGeo.computeVertexNormals();
 
     this.brainstemMesh = new THREE.Mesh(stemGeo, new THREE.MeshPhysicalMaterial({
-      color:             new THREE.Color(0x021410),
-      emissive:          new THREE.Color(0x022a18),
-      emissiveIntensity: 0.78,
-      roughness:         0.30,
-      metalness:         0.12,
-      clearcoat:         0.88,
-      clearcoatRoughness:0.18,
+      color:             new THREE.Color(0x021812),
+      emissive:          new THREE.Color(0x033822),
+      emissiveIntensity: 0.75,
+      roughness:         0.26,
+      metalness:         0.14,
+      clearcoat:         0.92,
+      clearcoatRoughness:0.14,
       transparent:       true,
-      opacity:           0.93,
+      opacity:           0.94,
+      side:              THREE.DoubleSide,
     }));
-    this.brainstemMesh.position.set(0, -0.84, -0.24);
-    this.brainstemMesh.rotation.x = 0.16;
+    this.brainstemMesh.position.set(0, -0.78, -0.22);
+    this.brainstemMesh.rotation.x = 0.14;
     this.group.add(this.brainstemMesh);
 
-    const stemWire = new THREE.Mesh(stemGeo, new THREE.MeshBasicMaterial({
-      color: 0x10b981, wireframe: true, transparent: true,
-      opacity: 0.18, blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
-    stemWire.position.copy(this.brainstemMesh.position);
-    stemWire.rotation.copy(this.brainstemMesh.rotation);
-    this.group.add(stemWire);
+    this.brainstemWireMesh = new THREE.Mesh(stemGeo, makeWireMat(0x10b981, 0.22));
+    this.brainstemWireMesh.position.copy(this.brainstemMesh.position);
+    this.brainstemWireMesh.rotation.copy(this.brainstemMesh.rotation);
+    this.group.add(this.brainstemWireMesh);
   }
 
   /**
-   * DTI Connectome curved axon fascicles — Catmull-Rom splines nested
-   * cleanly inside the cortical envelope.
+   * Anatomical DTI Connectome Fascicles — Catmull-Rom splines nested
+   * inside the volumetric cerebral cortex and connecting brain regions.
    */
   private buildConnectomeFibers() {
     this.fascicles = [];
-    const totalFascicles = 120;
+    const totalFascicles = 140;
 
     for (let f = 0; f < totalFascicles; f++) {
-      const type = f % 4;
+      const type = f % 5;
       const waypoints: THREE.Vector3[] = [];
       let lobe: AnatomicalLobe = 'frontal';
       let col = this.LOBE_PALETTES.frontal.clone();
 
       if (type === 0) {
-        // Corpus callosum transcallosal commissural arches
-        const zPos = -0.38 + (f / totalFascicles) * 0.80;
-        const archH = 0.18 + Math.random() * 0.26;
-        const span  = 0.38 + Math.random() * 0.26;
+        // Corpus Callosum commissural arches spanning left <-> right across fissure
+        const zPos = -0.45 + (f / totalFascicles) * 0.90;
+        const archH = 0.20 + Math.random() * 0.24;
+        const span  = 0.35 + Math.random() * 0.28;
         waypoints.push(
-          new THREE.Vector3(-span, 0.04 + Math.random() * 0.12, zPos),
-          new THREE.Vector3(-0.18, archH * 0.80, zPos),
+          new THREE.Vector3(-span, 0.05 + Math.random() * 0.12, zPos),
+          new THREE.Vector3(-0.18, archH * 0.85, zPos),
           new THREE.Vector3(0,     archH,         zPos),
-          new THREE.Vector3( 0.18, archH * 0.80, zPos),
-          new THREE.Vector3( span, 0.04 + Math.random() * 0.12, zPos)
+          new THREE.Vector3( 0.18, archH * 0.85, zPos),
+          new THREE.Vector3( span, 0.05 + Math.random() * 0.12, zPos)
         );
         lobe = 'parietal';
         col  = this.LOBE_PALETTES.parietal.clone();
       } else if (type === 1) {
-        // Superior longitudinal fasciculi (frontal→parietal→occipital)
+        // Superior Longitudinal Fasciculus (Frontal -> Parietal -> Occipital)
         const sx = (f % 2 === 0 ? -1 : 1);
-        const xd = (0.24 + Math.random() * 0.30) * sx;
+        const xd = (0.28 + Math.random() * 0.32) * sx;
         waypoints.push(
-          new THREE.Vector3(xd * 0.78, 0.18 + Math.random() * 0.18, 0.78),
-          new THREE.Vector3(xd * 1.00, 0.52 + Math.random() * 0.16, 0.12),
-          new THREE.Vector3(xd * 0.92, 0.28 + Math.random() * 0.14,-0.44),
-          new THREE.Vector3(xd * 0.60,-0.04 + Math.random() * 0.12,-0.78)
+          new THREE.Vector3(xd * 0.75,  0.15 + Math.random() * 0.15,  0.82),
+          new THREE.Vector3(xd * 1.05,  0.50 + Math.random() * 0.18,  0.18),
+          new THREE.Vector3(xd * 0.95,  0.30 + Math.random() * 0.15, -0.42),
+          new THREE.Vector3(xd * 0.65, -0.02 + Math.random() * 0.12, -0.80)
         );
-        lobe = f % 3 === 0 ? 'frontal' : f % 3 === 1 ? 'temporal' : 'occipital';
+        lobe = f % 3 === 0 ? 'frontal' : f % 3 === 1 ? 'parietal' : 'occipital';
         col  = this.LOBE_PALETTES[lobe].clone();
       } else if (type === 2) {
-        // Corticospinal projection tracts (motor cortex → brainstem)
+        // Inferior Fronto-Occipital & Arcuate Fasciculus (Temporal arch)
         const sx = (f % 2 === 0 ? -1 : 1);
-        const sx2 = (0.18 + Math.random() * 0.32) * sx;
+        const xd = (0.42 + Math.random() * 0.30) * sx;
         waypoints.push(
-          new THREE.Vector3(sx2,         0.60 + Math.random() * 0.18, -0.04 + Math.random() * 0.28),
-          new THREE.Vector3(sx2 * 0.48,  0.18, -0.08),
-          new THREE.Vector3(sx2 * 0.16, -0.30, -0.14),
-          new THREE.Vector3(0,           -0.98, -0.22)
+          new THREE.Vector3(xd * 0.65,  0.08 + Math.random() * 0.10,  0.65),
+          new THREE.Vector3(xd * 1.10, -0.15 + Math.random() * 0.10,  0.10),
+          new THREE.Vector3(xd * 0.90, -0.12 + Math.random() * 0.10, -0.55),
+          new THREE.Vector3(xd * 0.45,  0.05 + Math.random() * 0.10, -0.75)
+        );
+        lobe = 'temporal';
+        col  = this.LOBE_PALETTES.temporal.clone();
+      } else if (type === 3) {
+        // Corticospinal Projection Tracts (Motor Cortex -> Internal Capsule -> Brainstem)
+        const sx = (f % 2 === 0 ? -1 : 1);
+        const sx2 = (0.20 + Math.random() * 0.32) * sx;
+        waypoints.push(
+          new THREE.Vector3(sx2,         0.65 + Math.random() * 0.15,  0.05 + Math.random() * 0.20),
+          new THREE.Vector3(sx2 * 0.50,  0.22,                        -0.06),
+          new THREE.Vector3(sx2 * 0.18, -0.25,                        -0.14),
+          new THREE.Vector3(0,          -0.90,                        -0.20)
         );
         lobe = 'brainstem';
         col  = this.LOBE_PALETTES.brainstem.clone();
       } else {
-        // Cerebellar peduncles
+        // Cerebellar Peduncles (Brainstem <-> Cerebellum)
         const sx = (f % 2 === 0 ? -1 : 1);
         waypoints.push(
-          new THREE.Vector3(0,                           -0.30, -0.18),
-          new THREE.Vector3(0.18 * sx,                   -0.40, -0.44),
-          new THREE.Vector3((0.32 + Math.random() * 0.24) * sx, -0.48, -0.66)
+          new THREE.Vector3(0,                           -0.25, -0.15),
+          new THREE.Vector3(0.18 * sx,                   -0.38, -0.42),
+          new THREE.Vector3((0.35 + Math.random() * 0.22) * sx, -0.46, -0.68)
         );
         lobe = 'cerebellum';
         col  = this.LOBE_PALETTES.cerebellum.clone();
@@ -452,12 +533,12 @@ export class BrainEngine {
       this.fascicles.push({ curve, points, lobe, color: col });
     }
 
-    // ── Connectome LineSegments ───────────────────────────────────────────
+    // Connectome LineSegments
     let totalLineVerts = 0;
     this.fascicles.forEach(f => { totalLineVerts += (f.points.length - 1) * 2; });
 
-    const linePos   = new Float32Array(totalLineVerts * 3);
-    const lineCol   = new Float32Array(totalLineVerts * 3);
+    const linePos = new Float32Array(totalLineVerts * 3);
+    const lineCol = new Float32Array(totalLineVerts * 3);
     let pIdx = 0;
 
     this.fascicles.forEach(f => {
@@ -469,10 +550,10 @@ export class BrainEngine {
           linePos[pIdx * 3 + 0] = pt.x;
           linePos[pIdx * 3 + 1] = pt.y;
           linePos[pIdx * 3 + 2] = pt.z;
-          // Keep brightness safely below 1.0
-          lineCol[pIdx * 3 + 0] = Math.min(0.75, c.r * 0.72);
-          lineCol[pIdx * 3 + 1] = Math.min(0.75, c.g * 0.72);
-          lineCol[pIdx * 3 + 2] = Math.min(0.75, c.b * 0.72);
+          // Kept safely clamped below 0.80
+          lineCol[pIdx * 3 + 0] = Math.min(0.80, c.r * 0.75);
+          lineCol[pIdx * 3 + 1] = Math.min(0.80, c.g * 0.75);
+          lineCol[pIdx * 3 + 2] = Math.min(0.80, c.b * 0.75);
           pIdx++;
         }
       }
@@ -487,15 +568,15 @@ export class BrainEngine {
       new THREE.LineBasicMaterial({
         vertexColors: true,
         transparent:  true,
-        opacity:      0.58,
+        opacity:      0.65,
         blending:     THREE.AdditiveBlending,
         depthWrite:   false,
       })
     );
     this.group.add(this.connectomeLines);
 
-    // ── Action Potential Pulses ───────────────────────────────────────────
-    const pulseCount = 70;
+    // Action Potential Pulses (traveling sparks)
+    const pulseCount = 85;
     const pulsePosArr = new Float32Array(pulseCount * 3);
     const pulseColArr = new Float32Array(pulseCount * 3);
 
@@ -504,9 +585,9 @@ export class BrainEngine {
       this.actionPotentials.push({
         fascicleIdx: fIdx,
         progress:    Math.random(),
-        speed:       0.10 + Math.random() * 0.20,
+        speed:       0.12 + Math.random() * 0.22,
         color:       this.fascicles[fIdx].color.clone(),
-        size:        0.028,
+        size:        0.030,
       });
     }
 
@@ -517,13 +598,13 @@ export class BrainEngine {
     this.pulsePoints = new THREE.Points(
       this.pulseGeometry,
       new THREE.PointsMaterial({
-        size:         0.028,
-        map:          this.pulseTexture,
-        vertexColors: true,
-        transparent:  true,
-        opacity:      0.88,
-        blending:     THREE.AdditiveBlending,
-        depthWrite:   false,
+        size:            0.032,
+        map:             this.pulseTexture,
+        vertexColors:    true,
+        transparent:     true,
+        opacity:         0.90,
+        blending:        THREE.AdditiveBlending,
+        depthWrite:      false,
         sizeAttenuation: true,
       })
     );
@@ -531,38 +612,36 @@ export class BrainEngine {
   }
 
   /**
-   * Instanced glowing neural node clusters — tiny, well-spaced,
-   * with hard brightness cap to prevent white blowout.
+   * Instanced glowing neural soma nodes distributed naturally along the connectome
    */
   private buildInstancedNodes() {
     this.nodes = [];
-    const nodeSphere = new THREE.SphereGeometry(0.016, 8, 8);
+    const nodeSphere = new THREE.SphereGeometry(0.018, 8, 8);
     const nodeMat    = new THREE.MeshStandardMaterial({
-      roughness:         0.4,
-      metalness:         0.2,
+      roughness:         0.35,
+      metalness:         0.20,
       emissive:          new THREE.Color(0x00e0ff),
-      emissiveIntensity: 0.80,
+      emissiveIntensity: 0.85,
     });
 
-    // Sample node positions from fascicle midpoints — enforce min spacing 0.20
     const candidates: { pos: THREE.Vector3; lobe: AnatomicalLobe }[] = [];
     this.fascicles.forEach(f => {
-      candidates.push({ pos: f.curve.getPoint(0.22), lobe: f.lobe });
+      candidates.push({ pos: f.curve.getPoint(0.20), lobe: f.lobe });
       candidates.push({ pos: f.curve.getPoint(0.50), lobe: f.lobe });
-      candidates.push({ pos: f.curve.getPoint(0.78), lobe: f.lobe });
+      candidates.push({ pos: f.curve.getPoint(0.80), lobe: f.lobe });
     });
 
-    const MIN_DIST = 0.20;
+    const MIN_DIST = 0.18;
     candidates.forEach(cand => {
       const tooClose = this.nodes.some(n => n.position.distanceTo(cand.pos) < MIN_DIST);
-      if (!tooClose && this.nodes.length < 160) {
+      if (!tooClose && this.nodes.length < 175) {
         this.nodes.push({
           position:      cand.pos.clone(),
           originalPos:   cand.pos.clone(),
           lobe:          cand.lobe,
           isLeft:        cand.pos.x < 0,
-          activation:    0.4 + Math.random() * 0.4,
-          residualMemory:0.1,
+          activation:    0.45 + Math.random() * 0.40,
+          residualMemory:0.10,
           pulsePhase:    Math.random() * Math.PI * 2,
           depth:         cand.pos.length(),
         });
@@ -597,33 +676,30 @@ export class BrainEngine {
     this.contactReticleGroup.visible = false;
     this.group.add(this.contactReticleGroup);
 
-    const ringGeo = new THREE.RingGeometry(0.07, 0.12, 32);
+    const ringGeo = new THREE.RingGeometry(0.08, 0.13, 32);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x00d4ff, transparent: true, opacity: 0.80,
+      color: 0x00d4ff, transparent: true, opacity: 0.85,
       side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
     });
     this.contactRingMesh = new THREE.Mesh(ringGeo, ringMat);
     this.contactReticleGroup.add(this.contactRingMesh);
 
-    // Inner pulsing ring
-    const innerRingGeo = new THREE.RingGeometry(0.03, 0.06, 24);
+    const innerRingGeo = new THREE.RingGeometry(0.035, 0.065, 24);
     const innerRingMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff, transparent: true, opacity: 0.50,
+      color: 0xffffff, transparent: true, opacity: 0.55,
       side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
     });
     this.contactReticleGroup.add(new THREE.Mesh(innerRingGeo, innerRingMat));
 
-    // Electrical micro-arc line segments
     const arcGeo = new THREE.BufferGeometry();
     arcGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(8 * 6), 3));
     this.contactArcLines = new THREE.LineSegments(arcGeo, new THREE.LineBasicMaterial({
-      color: 0x00d4ff, transparent: true, opacity: 0.65,
+      color: 0x00d4ff, transparent: true, opacity: 0.70,
       blending: THREE.AdditiveBlending,
     }));
     this.contactReticleGroup.add(this.contactArcLines);
   }
 
-  /** Disabled halo — prevents hazy cloud artifacts */
   private buildAtmosphericHalo() {
     this.haloMesh = new THREE.Mesh(
       new THREE.BufferGeometry(),
@@ -632,7 +708,7 @@ export class BrainEngine {
   }
 
   /**
-   * Hover raycast: updates holographic reticle position, detects lobe, dispatches UI events
+   * Hover raycast: detects anatomical lobe, updates visuals, dispatches UI events
    */
   public handleHover(hitPoint?: THREE.Vector3, normal?: THREE.Vector3) {
     if (!hitPoint) {
@@ -644,7 +720,6 @@ export class BrainEngine {
       return;
     }
 
-    // 3D lobe detection from hit coordinates
     let detectedLobe: AnatomicalLobe = 'frontal';
     const hy = hitPoint.y;
     const hx = hitPoint.x;
@@ -656,9 +731,9 @@ export class BrainEngine {
       detectedLobe = 'cerebellum';
     } else if (hz > 0.42 && hy > -0.18) {
       detectedLobe = 'frontal';
-    } else if (hz < -0.52 && hy > -0.14) {
+    } else if (hz < -0.50 && hy > -0.16) {
       detectedLobe = 'occipital';
-    } else if (Math.abs(hx) > 0.68 && hy <= 0.22) {
+    } else if (Math.abs(hx) > 0.65 && hy <= 0.22) {
       detectedLobe = 'temporal';
     } else {
       detectedLobe = 'parietal';
@@ -677,7 +752,6 @@ export class BrainEngine {
       window.dispatchEvent(new CustomEvent('kalki-lobe-hover', { detail: { lobe: detectedLobe } }));
     }
 
-    // Position reticle on brain surface
     this.contactReticleGroup.visible = true;
     this.contactReticleGroup.position.copy(hitPoint);
     if (normal) {
@@ -692,7 +766,7 @@ export class BrainEngine {
     let arcIdx = 0;
     for (let i = 0; i < this.nodes.length && arcIdx < 8; i++) {
       const dist = hitPoint.distanceTo(this.nodes[i].position);
-      if (dist < 0.60 && dist > 0.07) {
+      if (dist < 0.65 && dist > 0.08) {
         arcPos[arcIdx * 6 + 0] = 0;
         arcPos[arcIdx * 6 + 1] = 0;
         arcPos[arcIdx * 6 + 2] = 0;
@@ -707,7 +781,7 @@ export class BrainEngine {
   }
 
   /**
-   * Activate a specific anatomical lobe — updates emissive colors and rotates camera
+   * Activate a specific anatomical lobe
    */
   public activateLobe(lobeKey: AnatomicalLobe) {
     this.activeLobe = lobeKey;
@@ -726,7 +800,7 @@ export class BrainEngine {
   }
 
   /**
-   * Updates cortical material emissive colors for hover/active lobe — brightness strictly clamped.
+   * Updates cortical material emissive colors for hover/active lobe
    */
   private updateLobeVisuals() {
     const targetLobe  = this.hoveredLobe || this.activeLobe;
@@ -737,31 +811,27 @@ export class BrainEngine {
     const cerMat   = this.cerebellumMesh.material      as THREE.MeshPhysicalMaterial;
     const stemMat  = this.brainstemMesh.material       as THREE.MeshPhysicalMaterial;
 
-    // Hemisphere emissive — never exceed 0.50 intensity to avoid blowout
-    const hemEmissive = targetColor.clone().multiplyScalar(0.38);
-    clampColor(hemEmissive, 0.50);
+    const hemEmissive = targetColor.clone().multiplyScalar(0.42);
+    clampColor(hemEmissive, 0.52);
     leftMat.emissive.copy(hemEmissive);
     rightMat.emissive.copy(hemEmissive);
 
-    // Cerebellum
     const cerTarget = targetLobe === 'cerebellum'
-      ? new THREE.Color(0.90, 0.0, 0.28)
-      : new THREE.Color(0.18, 0.02, 0.10);
+      ? new THREE.Color(0.92, 0.0, 0.30)
+      : new THREE.Color(0.24, 0.03, 0.14);
     cerMat.emissive.copy(cerTarget);
 
-    // Brainstem
     const stemTarget = targetLobe === 'brainstem'
-      ? new THREE.Color(0.04, 0.55, 0.36)
-      : new THREE.Color(0.02, 0.18, 0.12);
+      ? new THREE.Color(0.06, 0.65, 0.42)
+      : new THREE.Color(0.03, 0.22, 0.14);
     stemMat.emissive.copy(stemTarget);
 
-    // Wireframe accent
     (this.leftWireMesh.material as THREE.MeshBasicMaterial).color.copy(targetColor);
     (this.rightWireMesh.material as THREE.MeshBasicMaterial).color.copy(targetColor);
   }
 
   /**
-   * 5-Stage Cinematic Synaptic Shockwave Surge (double-tap / double-click)
+   * 5-Stage Cinematic Synaptic Shockwave Surge
    */
   public triggerSynapticSurge(targetPoint?: THREE.Vector3, onStageChange?: (stage: string, intensity: number) => void) {
     if (this.isSurging) return;
@@ -769,17 +839,17 @@ export class BrainEngine {
     this.surgeIntensity = 1.0;
     this.surgeCallback  = onStageChange;
 
-    // Stage 1: ANTICIPATION (0 → 450ms)
+    // Stage 1: ANTICIPATION
     this.audio.playAnticipationRiser(0.45);
     this.surgeCallback?.('ANTICIPATION', 0.5);
 
     setTimeout(() => {
-      // Stage 2: SILENCE (450 → 550ms)
+      // Stage 2: SILENCE
       this.audio.playSilenceMoment(0.1);
       this.surgeCallback?.('SILENCE', 0.0);
 
       setTimeout(() => {
-        // Stage 3: MASSIVE IMPACT (550ms)
+        // Stage 3: MASSIVE IMPACT
         this.audio.triggerShockwaveImpact();
         this.surgeCallback?.('IMPACT', 1.0);
 
@@ -788,12 +858,12 @@ export class BrainEngine {
         }
 
         setTimeout(() => {
-          // Stage 4: REVEAL (950ms)
+          // Stage 4: REVEAL
           this.audio.playRevealChime();
           this.surgeCallback?.('REVEAL', 0.6);
 
           setTimeout(() => {
-            // Stage 5: CALM (1800ms)
+            // Stage 5: CALM
             this.isSurging      = false;
             this.surgeIntensity = 0;
             this.surgeCallback?.('CALM', 0.0);
@@ -805,20 +875,19 @@ export class BrainEngine {
 
   /**
    * Per-frame render update:
-   * - Anatomical breathing rhythm
-   * - Action potential pulse traversal
-   * - Node alpha pulses with residual memory decay
-   * - Reticle rotation
+   * - Gentle breathing rhythm
+   * - Action potential traversal
+   * - Neural node pulses & residual decay
    */
   public update(delta: number, time: number) {
-    // 1. Gentle cerebral breathing
-    const breathScale = 1.0 + Math.sin(time * 1.4) * 0.012 + (this.isSurging ? Math.sin(time * 22.0) * 0.030 : 0);
+    // 1. Gentle cerebral breathing rhythm
+    const breathScale = 1.0 + Math.sin(time * 1.4) * 0.012 + (this.isSurging ? Math.sin(time * 22.0) * 0.028 : 0);
     this.leftHemisphereMesh.scale.set(breathScale, breathScale, breathScale);
     this.rightHemisphereMesh.scale.set(breathScale, breathScale, breathScale);
     this.leftWireMesh.scale.set(breathScale, breathScale, breathScale);
     this.rightWireMesh.scale.set(breathScale, breathScale, breathScale);
 
-    // 2. Action potential traversal — STRICT color clamping [0, 0.90]
+    // 2. Action potential traversal
     const pulsePosArr = this.pulseGeometry.attributes.position.array as Float32Array;
     const pulseColArr = this.pulseGeometry.attributes.color.array    as Float32Array;
     const speedMult   = this.isSurging ? 3.0 : 1.0;
@@ -842,7 +911,7 @@ export class BrainEngine {
       pulsePosArr[p * 3 + 2] = pt.z;
 
       const isActive  = this.activeLobe === 'all' || this.activeLobe === fascicle.lobe || this.hoveredLobe === fascicle.lobe;
-      const intensity = isActive ? 0.90 : 0.22;  // NEVER exceed 0.90
+      const intensity = isActive ? 0.90 : 0.22;
 
       pulseColArr[p * 3 + 0] = Math.min(0.90, fascicle.color.r * intensity);
       pulseColArr[p * 3 + 1] = Math.min(0.90, fascicle.color.g * intensity);
@@ -852,7 +921,7 @@ export class BrainEngine {
     this.pulseGeometry.attributes.position.needsUpdate = true;
     this.pulseGeometry.attributes.color.needsUpdate    = true;
 
-    // 3. Instanced nodes — brightness clamped at 0.85 per channel
+    // 3. Instanced nodes
     for (let i = 0; i < this.nodes.length; i++) {
       const n = this.nodes[i];
       n.pulsePhase    += delta * 2.2;
@@ -873,7 +942,6 @@ export class BrainEngine {
       const lobeCol = this.LOBE_PALETTES[n.lobe].clone();
       const brightness = (0.75 + n.residualMemory * 1.0 + alphaWave * 0.25) * (isActive ? 1.0 : 0.30);
       this.colorHelper.copy(lobeCol).multiplyScalar(brightness);
-      // Hard clamp — no white blowout ever
       clampColor(this.colorHelper, 0.85);
       this.instancedNodes.setColorAt(i, this.colorHelper);
     }
@@ -900,6 +968,10 @@ export class BrainEngine {
     (this.leftWireMesh.material as THREE.Material).dispose();
     this.rightWireMesh.geometry.dispose();
     (this.rightWireMesh.material as THREE.Material).dispose();
+    this.cerebellumWireMesh.geometry.dispose();
+    (this.cerebellumWireMesh.material as THREE.Material).dispose();
+    this.brainstemWireMesh.geometry.dispose();
+    (this.brainstemWireMesh.material as THREE.Material).dispose();
     this.connectomeGeometry.dispose();
     (this.connectomeLines.material as THREE.Material).dispose();
     this.pulseGeometry.dispose();
