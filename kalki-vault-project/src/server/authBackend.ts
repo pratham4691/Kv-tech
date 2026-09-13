@@ -114,7 +114,7 @@ export function recordAuditEvent(principal: string, action: string, result: 'SUC
 }
 
 // Clean up expired challenges and inactive sessions
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [key, val] of pendingChallenges.entries()) {
     if (now - val.timestamp > 120000) pendingChallenges.delete(key);
@@ -127,6 +127,9 @@ setInterval(() => {
     }
   }
 }, 60000);
+if (typeof cleanupInterval === 'object' && cleanupInterval !== null && 'unref' in cleanupInterval) {
+  cleanupInterval.unref();
+}
 
 export function getAuditLogs(sessionToken?: string): { success: boolean; logs?: AuditLogEntry[]; error?: string } {
   const session = validateSession(sessionToken);
