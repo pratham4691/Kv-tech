@@ -2,7 +2,7 @@
  * KALKI VAULT — Cinematic Audio Director
  * Procedural Web Audio API sound designer.
  * Renders atmospheric low-frequency drones, neural hums, anticipation risers,
- * explosive impact shockwaves, silence cutoffs, and tactile UI ticks.
+ * explosive impact shockwaves, silence cutoffs, tactile UI ticks, and quantum acoustic feedback.
  */
 
 export class AudioDirector {
@@ -88,6 +88,97 @@ export class AudioDirector {
     osc.stop(this.ctx.currentTime + 0.06);
   }
 
+  public playQuantumClick(freq = 2400) {
+    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.03);
+
+    gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.035);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.035);
+  }
+
+  public playShieldDeflection() {
+    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.exponentialRampToValueAtTime(320, now + 0.14);
+
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+
+    osc.start(now);
+    osc.stop(now + 0.15);
+  }
+
+  public playVaultLock() {
+    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
+    const now = this.ctx.currentTime;
+    
+    // Low mechanical clang
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(95, now);
+    osc.frequency.exponentialRampToValueAtTime(32, now + 0.45);
+
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    osc.start(now);
+    osc.stop(now + 0.5);
+  }
+
+  public playSilenceMoment(duration = 0.1) {
+    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
+    const now = this.ctx.currentTime;
+    this.masterGain.gain.cancelScheduledValues(now);
+    this.masterGain.gain.setValueAtTime(0.0001, now);
+    this.masterGain.gain.setValueAtTime(0.35, now + duration);
+  }
+
+  public playRevealChime() {
+    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
+    const now = this.ctx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio
+
+    notes.forEach((freq, idx) => {
+      const osc = this.ctx!.createOscillator();
+      const gain = this.ctx!.createGain();
+      const startTime = now + idx * 0.055;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.06, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.4);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain!);
+
+      osc.start(startTime);
+      osc.stop(startTime + 0.4);
+    });
+  }
+
   public playSynapticSpark(freq = 1200) {
     if (!this.isEnabled || !this.ctx || !this.masterGain) return;
     const osc = this.ctx.createOscillator();
@@ -145,59 +236,46 @@ export class AudioDirector {
     subOsc.start(now);
     subOsc.stop(now + 0.7);
 
-    // Filtered noise crackle
-    const bufferSize = this.ctx.sampleRate * 0.4;
-    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    // High frequency white noise crackle
+    const bufferSize = this.ctx.sampleRate * 0.15;
+    const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
 
-    const noise = this.ctx.createBufferSource();
-    noise.buffer = buffer;
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(1800, now);
-    filter.frequency.exponentialRampToValueAtTime(300, now + 0.4);
+    const whiteNoise = this.ctx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+
+    const noiseFilter = this.ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.setValueAtTime(2200, now);
+    noiseFilter.Q.setValueAtTime(2.0, now);
 
     const noiseGain = this.ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.15, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    noiseGain.gain.setValueAtTime(0.2, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
-    noise.connect(filter);
-    filter.connect(noiseGain);
+    whiteNoise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
     noiseGain.connect(this.masterGain);
 
-    noise.start(now);
-    noise.stop(now + 0.4);
+    whiteNoise.start(now);
+    whiteNoise.stop(now + 0.15);
   }
 
-  public playSilenceMoment(durationSec = 0.5) {
-    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
-    const now = this.ctx.currentTime;
-    this.masterGain.gain.cancelScheduledValues(now);
-    this.masterGain.gain.setValueAtTime(0.0001, now);
-    this.masterGain.gain.exponentialRampToValueAtTime(0.35, now + durationSec);
+  public silenceAll() {
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+      this.masterGain.gain.linearRampToValueAtTime(0.35, this.ctx.currentTime + 1.2);
+    }
   }
 
-  public playRevealChime() {
-    if (!this.isEnabled || !this.ctx || !this.masterGain) return;
-    const chords = [523.25, 659.25, 783.99, 1046.5]; // C Major ethereal bloom
-    chords.forEach((freq, idx) => {
-      if (!this.ctx || !this.masterGain) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      const start = this.ctx.currentTime + idx * 0.08;
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, start);
-
-      gain.gain.setValueAtTime(0.06, start);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.2);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain);
-
-      osc.start(start);
-      osc.stop(start + 1.2);
-    });
+  public dispose() {
+    try {
+      this.droneOsc?.stop();
+      this.ctx?.close();
+    } catch (_) {}
   }
 }

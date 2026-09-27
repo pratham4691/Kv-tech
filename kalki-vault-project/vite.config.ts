@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -20,7 +20,8 @@ import {
 import {
   queryFable51,
   streamFable51,
-  isFableConfigured
+  isFableConfigured,
+  getOpenRouterModel
 } from './src/server/fableService';
 
 function parseRequestBody(req: IncomingMessage): Promise<any> {
@@ -46,7 +47,16 @@ function sendJson(res: ServerResponse, status: number, data: any) {
   res.end(JSON.stringify(data));
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  if (env.OPENROUTER_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    process.env.OPENROUTER_API_KEY = env.OPENROUTER_API_KEY;
+  }
+  if (env.OPENROUTER_MODEL && !process.env.OPENROUTER_MODEL) {
+    process.env.OPENROUTER_MODEL = env.OPENROUTER_MODEL;
+  }
+
+  return {
   plugins: [
     react(),
     {
@@ -162,22 +172,24 @@ export default defineConfig({
               return sendJson(res, result.success ? 200 : 403, result);
             }
 
-            // Claude Fable 5.1 Status Check
-            if (url === '/api/fable/status' && req.method === 'GET') {
+            // Neural Copilot Status Check (Supports /api/fable/status and /api/copilot/status)
+            if ((url === '/api/fable/status' || url === '/api/copilot/status') && req.method === 'GET') {
+              const currentModel = getOpenRouterModel();
               return sendJson(res, 200, {
                 success: true,
-                model: 'anthropic/claude-fable-5.1',
+                model: currentModel,
                 isConfigured: isFableConfigured(),
                 timestamp: Date.now()
               });
             }
 
-            // Claude Fable 5.1 Chat Completion (Streaming & Synchronous)
-            if (url === '/api/fable/chat' && req.method === 'POST') {
+            // Neural Copilot Chat Completion (Streaming & Synchronous via OpenRouter Middle Man)
+            if ((url === '/api/fable/chat' || url === '/api/copilot/chat') && req.method === 'POST') {
               const body = await parseRequestBody(req);
               const messages = body.messages || [
                 { role: 'user', content: body.prompt || '' }
               ];
+              const targetModel = body.model || getOpenRouterModel();
 
               if (body.stream !== false) {
                 res.writeHead(200, {
@@ -200,18 +212,20 @@ export default defineConfig({
                     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
                     res.end();
                   },
-                  body.max_tokens || 350
+                  body.max_tokens || 300,
+                  targetModel
                 );
                 return;
               } else {
                 try {
                   const text = await queryFable51(
                     body.prompt || messages[messages.length - 1]?.content || '',
-                    messages.slice(0, -1)
+                    messages.slice(0, -1),
+                    targetModel
                   );
                   return sendJson(res, 200, {
                     success: true,
-                    model: 'anthropic/claude-fable-5.1',
+                    model: targetModel,
                     content: text
                   });
                 } catch (err: any) {
@@ -248,4 +262,5 @@ export default defineConfig({
     port: 5173,
     open: false,
   },
+};
 });

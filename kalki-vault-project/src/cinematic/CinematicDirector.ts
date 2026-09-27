@@ -5,6 +5,9 @@ import { ParticleDirector } from '../particles/ParticleDirector';
 import { BrainEngine, AnatomicalLobe } from '../brain/BrainEngine';
 import { AudioDirector } from '../audio/AudioDirector';
 import { PerformanceDirector } from '../performance/PerformanceDirector';
+import { PostFXDirector } from './PostFXDirector';
+import { EnvironmentDirector } from './EnvironmentDirector';
+import { AstraCore } from './AstraCore';
 
 export class CinematicDirector {
   private renderer!: THREE.WebGLRenderer;
@@ -15,6 +18,9 @@ export class CinematicDirector {
   public brainEngine!: BrainEngine;
   public audioDirector!: AudioDirector;
   public perfDirector!: PerformanceDirector;
+  public postFX!: PostFXDirector;
+  public environment!: EnvironmentDirector;
+  public astraCore!: AstraCore;
 
   private clock = new THREE.Clock();
   private scrollProgress = 0;
@@ -76,8 +82,16 @@ export class CinematicDirector {
 
     // Subsystems
     this.atmosphereDirector = new AtmosphereDirector(this.scene);
+    this.environment = new EnvironmentDirector(this.scene, this.perfDirector);
     this.particleDirector = new ParticleDirector(this.scene, this.perfDirector);
     this.brainEngine = new BrainEngine(this.scene, this.audioDirector, this.perfDirector);
+    this.astraCore = new AstraCore(this.scene, this.perfDirector);
+    this.postFX = new PostFXDirector(
+      this.renderer,
+      this.scene,
+      this.cameraDirector.camera,
+      this.perfDirector,
+    );
 
     // Event Listeners
     window.addEventListener('resize', this.onResize.bind(this));
@@ -114,6 +128,7 @@ export class CinematicDirector {
     this.cameraDirector.updateAspect(width / height);
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(this.perfDirector.profile.maxDpr);
+    this.postFX?.setSize(width, height);
   }
 
   private onScroll() {
@@ -122,26 +137,29 @@ export class CinematicDirector {
     this.scrollProgress = Math.max(0, Math.min(1, scrollTop / Math.max(1, docHeight)));
 
     // Dynamic scene color grading based on scroll position
-    if (this.scrollProgress < 0.25) {
-      // Hero / Neural Intelligence: Cyan
-      this.atmosphereDirector.setColorGrade('#00f0ff');
-      this.particleDirector.setCinematicState('CALM');
-    } else if (this.scrollProgress < 0.5) {
-      // Threat Radar & Kill Chain: Threat Crimson
-      this.atmosphereDirector.setColorGrade('#ff0055');
-      this.particleDirector.setCinematicState('TENSION');
-    } else if (this.scrollProgress < 0.72) {
-      // Quantum Lab / PQC Lattice: Quantum Emerald
-      this.atmosphereDirector.setColorGrade('#10b981');
-      this.particleDirector.setCinematicState('ACCELERATION');
-    } else if (this.scrollProgress < 0.88) {
-      // Ecosystem & Academy: Research Gold
-      this.atmosphereDirector.setColorGrade('#f59e0b');
-      this.particleDirector.setCinematicState('REVEAL');
+    const applyMood = (grade: string, particles: Parameters<ParticleDirector['setCinematicState']>[0]) => {
+      this.atmosphereDirector.setColorGrade(grade);
+      this.particleDirector.setCinematicState(particles);
+      this.postFX?.setMood(particles);
+      // Mirror the mood into the page layer (aurora intensity)
+      const body = document.body;
+      body.classList.toggle('aurora-tension', particles === 'TENSION' || particles === 'ACCELERATION');
+      body.classList.toggle('aurora-impact', particles === 'IMPACT');
+      body.classList.toggle('aurora-silence', particles === 'SILENCE');
+    };
+
+    if (this.scrollProgress < 0.22) {
+      // Stage 1: Hero / Astra Core — Mint & Vault Cyan
+      applyMood('#00f5a0', 'CALM');
+    } else if (this.scrollProgress < 0.48) {
+      // Stage 2: Threat Radar & Deflection Shield — Threat Crimson
+      applyMood('#ff0055', 'TENSION');
+    } else if (this.scrollProgress < 0.75) {
+      // Stage 3: Bi-Hemispheric Brain & Quantum Lab — Emerald & Violet
+      applyMood('#10b981', 'ACCELERATION');
     } else {
-      // Deep Vault: Deep-Space Blue
-      this.atmosphereDirector.setColorGrade('#38bdf8');
-      this.particleDirector.setCinematicState('CALM');
+      // Stage 4: Sovereign Vault & Deep Horizon — Deep Space Cyan/Gold
+      applyMood('#00f0ff', 'REVEAL');
     }
   }
 
@@ -165,6 +183,12 @@ export class CinematicDirector {
       e.clientY >= rect.top && e.clientY <= rect.bottom
     );
 
+    this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // Send mouse coordinates to AstraCore for active gyroscopic astrolabe tracking
+    this.astraCore?.setPointerOffset(this.mouse.x, this.mouse.y);
+
     if (this.isDragging) {
       const dx = (e.clientX - this.startX) * 0.0075;
       const dy = (e.clientY - this.startY) * 0.0075;
@@ -178,8 +202,6 @@ export class CinematicDirector {
 
     // Precision Raycast on Brain Surface when pointer is over canvas
     if (isInsideCanvas && !this.isDragging) {
-      this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
       this.raycaster.setFromCamera(this.mouse, this.cameraDirector.camera);
 
       const targets = [
@@ -212,7 +234,7 @@ export class CinematicDirector {
     this.zoom = Math.max(0.65, Math.min(1.65, this.zoom));
   }
 
-  // Double Click for Synaptic Surge
+  // Double Click for Synaptic Surge & Shockwave
   private onDoubleClick(e: MouseEvent) {
     const rect = this.renderer.domElement.getBoundingClientRect();
     this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -220,40 +242,39 @@ export class CinematicDirector {
     this.executeCinematicSurge();
   }
 
-  // Touch Support
+  // Mobile Touch Support
   private onTouchStart(e: TouchEvent) {
     if (e.touches.length === 1) {
-      const touch = e.touches[0];
       const now = Date.now();
-      if (now - this.lastTapTime < 340) {
-        // Double tap!
+      if (now - this.lastTapTime < 320) {
+        // Double-tap detected
         const rect = this.renderer.domElement.getBoundingClientRect();
-        this.mouse.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-        this.mouse.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+        this.mouse.x = ((e.touches[0].clientX - rect.left) / rect.width) * 2 - 1;
+        this.mouse.y = -((e.touches[0].clientY - rect.top) / rect.height) * 2 + 1;
         this.executeCinematicSurge();
-      } else {
-        this.isDragging = true;
-        this.startX = touch.clientX;
-        this.startY = touch.clientY;
-        this.velX = 0;
-        this.velY = 0;
       }
       this.lastTapTime = now;
+
+      this.isDragging = true;
+      this.startX = e.touches[0].clientX;
+      this.startY = e.touches[0].clientY;
+      this.velX = 0;
+      this.velY = 0;
+      this.targetRotX = null;
+      this.targetRotY = null;
     }
   }
 
   private onTouchMove(e: TouchEvent) {
     if (this.isDragging && e.touches.length === 1) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const dx = (touch.clientX - this.startX) * 0.008;
-      const dy = (touch.clientY - this.startY) * 0.008;
+      const dx = (e.touches[0].clientX - this.startX) * 0.008;
+      const dy = (e.touches[0].clientY - this.startY) * 0.008;
       this.rotY += dx;
       this.rotX += dy;
       this.velY = dx;
       this.velX = dy;
-      this.startX = touch.clientX;
-      this.startY = touch.clientY;
+      this.startX = e.touches[0].clientX;
+      this.startY = e.touches[0].clientY;
     }
   }
 
@@ -261,25 +282,25 @@ export class CinematicDirector {
     this.isDragging = false;
   }
 
-  /**
-   * Smoothly rotates the brain to showcase a selected lobe
-   */
+  // Smoothly rotate the camera & brain towards an anatomical lobe
   public focusLobe(lobe: AnatomicalLobe) {
+    this.velX = 0;
+    this.velY = 0;
     if (lobe === 'frontal') {
-      this.targetRotX = 0.15;
-      this.targetRotY = 0.0;
+      this.targetRotX = 0.05;
+      this.targetRotY = 0.15;
     } else if (lobe === 'temporal') {
-      this.targetRotX = 0.12;
-      this.targetRotY = 1.57;
+      this.targetRotX = 0.10;
+      this.targetRotY = 1.35; // rotate to side
     } else if (lobe === 'parietal') {
-      this.targetRotX = 0.55;
-      this.targetRotY = 0.35;
+      this.targetRotX = 0.45;
+      this.targetRotY = 0.35; // top-down look
     } else if (lobe === 'occipital') {
-      this.targetRotX = 0.20;
-      this.targetRotY = 3.14;
+      this.targetRotX = 0.12;
+      this.targetRotY = 2.85; // back of head
     } else if (lobe === 'cerebellum') {
-      this.targetRotX = -0.45;
-      this.targetRotY = 3.14;
+      this.targetRotX = -0.25;
+      this.targetRotY = 2.45;
     } else if (lobe === 'brainstem') {
       this.targetRotX = -0.35;
       this.targetRotY = 0.0;
@@ -302,6 +323,10 @@ export class CinematicDirector {
     const intersects = this.raycaster.intersectObjects(targets, false);
     const hitPoint = intersects.length > 0 ? intersects[0].point : new THREE.Vector3(0, 0.2, 0);
 
+    // Trigger Astra Core Shock Pulse
+    this.astraCore?.triggerShockPulse();
+    this.audioDirector.playShieldDeflection();
+
     this.brainEngine.triggerSynapticSurge(hitPoint, (stage, intensity) => {
       if (stage === 'ANTICIPATION') {
         this.particleDirector.setCinematicState('TENSION');
@@ -311,6 +336,9 @@ export class CinematicDirector {
         this.cameraDirector.triggerMicroShake(0.40);
         this.atmosphereDirector.triggerLightningFlash();
         this.particleDirector.triggerShockwave(hitPoint, '#00f0ff');
+        this.environment.spawnShockRing(hitPoint, '#00f0ff');
+        this.postFX.triggerImpactKick();
+        this.postFX.setMood('IMPACT');
         this.particleDirector.setCinematicState('IMPACT');
 
         // Add temporary chromatic aberration screen shake via CSS class
@@ -320,6 +348,7 @@ export class CinematicDirector {
         this.particleDirector.setCinematicState('REVEAL');
       } else if (stage === 'CALM') {
         this.particleDirector.setCinematicState('CALM');
+        this.postFX.setMood('CALM');
       }
     });
   }
@@ -363,11 +392,14 @@ export class CinematicDirector {
     // Update all cinematic subsystems
     this.cameraDirector.update(delta, this.scrollProgress, time);
     this.atmosphereDirector.update(delta, time);
+    this.environment.update(delta, time, this.cameraDirector.camera);
     this.particleDirector.update(delta, time);
     this.brainEngine.update(delta, time);
+    this.astraCore.update(delta, time, this.scrollProgress, this.brainEngine.group);
+    this.postFX.update(delta, time);
 
-    // Render 3D Scene
-    this.renderer.render(this.scene, this.cameraDirector.camera);
+    // Render through the film-grade post pipeline
+    this.postFX.composer.render();
   };
 
   public toggleSound(): boolean {
@@ -379,6 +411,9 @@ export class CinematicDirector {
     window.removeEventListener('resize', this.onResize.bind(this));
     window.removeEventListener('scroll', this.onScroll.bind(this));
     this.brainEngine.dispose();
+    this.environment.dispose();
+    this.astraCore.dispose();
+    this.postFX.dispose();
     this.renderer.dispose();
   }
 }

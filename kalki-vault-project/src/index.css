@@ -34,9 +34,9 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════════
    CINEMATIC POST-PROCESSING & IMPACT SHAKE
-   ═══════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════════ */
 @keyframes cinematicMicroShake {
   0% { transform: translate(0, 0) scale(1); filter: none; }
   20% { transform: translate(-4px, 3px) scale(1.008); filter: drop-shadow(3px 0 0 rgba(255, 0, 85, 0.6)) drop-shadow(-3px 0 0 rgba(0, 240, 255, 0.6)); }
@@ -50,40 +50,41 @@
   animation: cinematicMicroShake 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   BREATHTAKING 3D CARD HOVER WITH DYNAMIC LIGHT TRACING
-   ═══════════════════════════════════════════════════════════════ */
-.tilt-card {
+/* ══════════════════════════════════════════════════════════════════════════
+   PHOSPHOR SPOTLIGHT & 3D BENTO CARDS (FLIR-GRADE RECEPTION)
+   ══════════════════════════════════════════════════════════════════════════ */
+.tilt-card, .phosphor-card {
   position: relative;
-  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
   transform-style: preserve-3d;
   will-change: transform;
 }
 
-.tilt-card::before {
+.tilt-card::before, .phosphor-card::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -1px;
   border-radius: inherit;
-  background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.12), transparent 70%);
+  background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.14), transparent 65%),
+              radial-gradient(280px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(157, 78, 221, 0.10), transparent 50%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
 }
 
-.tilt-card:hover::before {
+.tilt-card:hover::before, .phosphor-card:hover::before {
   opacity: 1;
 }
 
-.tilt-card:hover {
+.tilt-card:hover, .phosphor-card:hover {
   border-color: rgba(0, 240, 255, 0.45) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 240, 255, 0.2), 0 0 25px rgba(0, 240, 255, 0.1);
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════════
    MAGNETIC BUTTON ATTRACTOR
-   ═══════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════════ */
 .magnetic-btn {
   display: inline-flex;
   align-items: center;
@@ -96,9 +97,39 @@
   box-shadow: 0 0 25px rgba(0, 240, 255, 0.35);
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════════
+   CRYPTOGRAPHIC DECRYPTION & EQUALIZER HUD
+   ══════════════════════════════════════════════════════════════════════════ */
+.scramble-decrypt {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  will-change: contents;
+}
+
+.scramble-active {
+  color: #00f0ff !important;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.75);
+}
+
+.equalizer-bar {
+  display: inline-block;
+  width: 3px;
+  background: #00f0ff;
+  border-radius: 2px;
+  margin: 0 1px;
+  animation: eqPulse 1.2s ease-in-out infinite alternate;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
+}
+
+@keyframes eqPulse {
+  0% { height: 4px; opacity: 0.3; }
+  50% { height: 18px; opacity: 1.0; }
+  100% { height: 8px; opacity: 0.6; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
    ATMOSPHERIC NEBULA & CONTINUOUS DRIFT
-   ═══════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════════ */
 @keyframes nebulaDrift {
   0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.35; }
   50% { transform: translate(-30px, 20px) scale(1.08) rotate(180deg); opacity: 0.55; }

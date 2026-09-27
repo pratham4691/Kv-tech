@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth dark intro-armed">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -167,6 +167,111 @@
       50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.8), inset 0 0 25px rgba(0, 240, 255, 0.6); }
     }
     .copilot-sphere { animation: copilotPulse 3s ease-in-out infinite; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CINEMATIC UPGRADE LAYER — aurora field, boot choreography,
+       scroll progress, hero title rise, threat-card depth
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* Aurora gradient field behind everything */
+    #aurora-bg {
+      position: fixed; inset: -20%; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(42% 34% at 18% 22%, rgba(0, 240, 255, 0.16), transparent 60%),
+        radial-gradient(38% 30% at 82% 28%, rgba(168, 85, 247, 0.15), transparent 60%),
+        radial-gradient(46% 38% at 68% 78%, rgba(16, 185, 129, 0.10), transparent 60%),
+        radial-gradient(34% 28% at 28% 82%, rgba(255, 0, 85, 0.09), transparent 60%);
+      filter: blur(60px) saturate(1.15);
+      opacity: 0.75;
+      animation: auroraShift 26s ease-in-out infinite alternate;
+      transition: opacity 1.2s ease;
+    }
+    @keyframes auroraShift {
+      0%   { transform: translate3d(-2%, -1%, 0) scale(1) rotate(0deg); }
+      50%  { transform: translate3d(2%, 2%, 0) scale(1.08) rotate(1.2deg); }
+      100% { transform: translate3d(-1%, 1.5%, 0) scale(1.04) rotate(-1deg); }
+    }
+    body.aurora-tension #aurora-bg { opacity: 1; filter: blur(52px) saturate(1.35); }
+    body.aurora-impact #aurora-bg { animation-duration: 6s; opacity: 1; }
+    body.aurora-silence #aurora-bg { opacity: 0.35; }
+
+    /* Cinematic scroll progress bar */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2.5px; width: 100%;
+      transform-origin: 0 50%; transform: scaleX(0);
+      background: linear-gradient(90deg, #00f0ff, #a855f7, #10b981, #f59e0b);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.8), 0 0 4px rgba(168, 85, 247, 0.6);
+      z-index: 60; pointer-events: none;
+    }
+
+    /* Boot-gated entrance choreography */
+    html.intro-armed #bg-canvas { opacity: 0 !important; animation: canvasFadeIn 1.6s ease 0.15s forwards; }
+    @keyframes canvasFadeIn { to { opacity: 0.5; } }
+    html.intro-armed #aurora-bg { opacity: 0; animation: auroraIn 2.2s ease 0.2s forwards; }
+    @keyframes auroraIn { to { opacity: 0.75; } }
+    html.intro-armed .reveal-element { opacity: 0; }
+    html.intro-armed .reveal-element.revealed {
+      opacity: 1;
+      animation: revealPop 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes revealPop {
+      0% { opacity: 0; transform: translateY(46px) scale(0.965); filter: blur(6px); }
+      60% { filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    /* Hero title word-by-word cinematic rise */
+    html.intro-armed .hero-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px) rotateX(50deg);
+      filter: blur(8px);
+    }
+    .hero-word.kv-in {
+      animation: wordRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes wordRise {
+      0% { opacity: 0; transform: translateY(30px) rotateX(50deg); filter: blur(8px); }
+      100% { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
+    }
+
+    /* Threat cards: 3D entrance + interactive depth */
+    .threat-card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.45s ease, background 0.3s ease;
+      will-change: transform;
+    }
+    .threat-card-3d::before {
+      content: ''; position: absolute; inset: 0; border-radius: 1rem;
+      background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(0, 240, 255, 0.14), transparent 65%);
+      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .threat-card-3d:hover::before { opacity: 1; }
+
+    /* Kill chain stage pulse */
+    .stage-pulse { animation: stagePulse 0.55s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes stagePulse {
+      0% { opacity: 0.25; transform: translateY(14px); filter: blur(3px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    /* Navbar compact state */
+    #navbar.nav-shrunk {
+      top: 4px; padding-top: 0.35rem; padding-bottom: 0.35rem;
+      background: rgba(3, 7, 18, 0.97);
+      box-shadow: 0 8px 30px -12px rgba(0, 240, 255, 0.25);
+    }
+
+    /* Reduced motion: show everything immediately, no choreography */
+    @media (prefers-reduced-motion: reduce) {
+      html.intro-armed .reveal-element,
+      html.intro-armed .hero-word,
+      html.intro-armed #bg-canvas,
+      html.intro-armed #aurora-bg {
+        opacity: 1 !important; animation: none !important; transform: none !important; filter: none !important;
+      }
+      #aurora-bg, #scroll-progress { animation: none !important; }
+    }
 
     /* ═══════════════════════════════════════════════════════════════
        ADVANCED ANIMATION SYSTEMS — CYBER DEFENSE GRADE
@@ -543,30 +648,52 @@
       var bar = document.getElementById('preloader-bar');
       var pct = document.getElementById('preloader-pct');
       var pl = document.getElementById('preloader');
+      var txt = document.getElementById('preloader-text');
+      var BOOT_LINES = [
+        'Synchronizing Neural Defense Mesh...',
+        'Spinning up bi-hemispheric cortex...',
+        'Charging synaptic pulse capacitors...',
+        'Calibrating orbital threat radar...',
+        'Arming post-quantum vault gates...'
+      ];
+      var lineIdx = 0;
       var t = setInterval(function() {
-        p += 30;
+        p += 20;
         if (bar) bar.style.width = Math.min(p, 100) + '%';
         if (pct) pct.innerText = Math.min(p, 100) + '%';
+        if (txt && BOOT_LINES[lineIdx]) txt.innerText = BOOT_LINES[lineIdx];
+        lineIdx = Math.min(lineIdx + 1, BOOT_LINES.length - 1);
         if (p >= 100) {
           clearInterval(t);
+          if (txt) txt.innerText = 'DEFENSE GRID ONLINE';
+          // Cinematic handoff: whiteout bloom, then the site rises from darkness
           if (pl) {
+            pl.style.transition = 'opacity 900ms ease, filter 900ms ease, transform 900ms ease';
+            pl.style.filter = 'blur(0px) brightness(1.9)';
             pl.style.opacity = '0';
+            pl.style.transform = 'scale(1.06)';
             pl.style.pointerEvents = 'none';
-            setTimeout(function() { pl.remove(); }, 200);
+            document.documentElement.classList.remove('intro-armed');
+            window.dispatchEvent(new CustomEvent('kalki:intro-go'));
+            setTimeout(function() { pl.remove(); }, 950);
           }
         }
-      }, 25);
+      }, 220);
       setTimeout(function() {
         if (pl && pl.parentNode) {
           pl.style.opacity = '0';
           pl.style.pointerEvents = 'none';
+          document.documentElement.classList.remove('intro-armed');
+          window.dispatchEvent(new CustomEvent('kalki:intro-go'));
           setTimeout(function() { pl.remove(); }, 150);
         }
-      }, 200);
+      }, 6000);
     })();
   </script>
 
-  <!-- 3. BACKGROUND CANVAS WITH REACTIVE NEURAL PARTICLES -->
+  <!-- 3. BACKGROUND: AURORA GRADIENT FIELD + REACTIVE NEURAL PARTICLE CANVAS -->
+  <div id="aurora-bg" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
   <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
 
   <!-- 4. TOP CYBER TELEMETRY BAR (DEFCON & SATELLITE UPLINK) -->
@@ -580,6 +707,13 @@
           </span>
           DEFENSE GRID: ONLINE
         </span>
+        <div class="flex items-center gap-0.5 h-3 ml-2" title="Quantum Frequency Spectrum">
+          <span class="equalizer-bar" style="animation-delay: 0.1s;"></span>
+          <span class="equalizer-bar" style="animation-delay: 0.4s;"></span>
+          <span class="equalizer-bar" style="animation-delay: 0.2s;"></span>
+          <span class="equalizer-bar" style="animation-delay: 0.6s;"></span>
+          <span class="equalizer-bar" style="animation-delay: 0.3s;"></span>
+        </div>
         <span class="text-slate-700">|</span>
         <span class="hidden md:inline text-slate-400">NODE: KALKI-ORBITAL-01</span>
         <span class="text-slate-700 hidden md:inline">|</span>
@@ -781,7 +915,7 @@
             <span>KV TECHNOLOGIES • AUTONOMOUS CYBER DEFENSE ECOSYSTEM</span>
           </div>
           
-          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-100 tracking-tight leading-tight">
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-100 tracking-tight leading-tight" id="hero-title">
             Security begins with <span class="glitch-text text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-amber-400 to-vault-cyan cyber-glow-cyan" data-text="understanding.">understanding.</span>
           </h1>
           
@@ -3566,10 +3700,10 @@
         ? masterThreats
         : masterThreats.filter(t => t.category === category);
 
-      filtered.forEach(t => {
+      filtered.forEach((t, cardIdx) => {
         const card = document.createElement('div');
         const isCritical = t.severity === 'CRITICAL';
-        card.className = 'p-6 rounded-2xl bg-vault-900/80 border border-white/10 hover:border-vault-cyan/60 transition-colors flex flex-col justify-between group shadow-lg';
+        card.className = 'threat-card-3d relative p-6 rounded-2xl bg-vault-900/80 border border-white/10 hover:border-vault-cyan/60 transition-colors flex flex-col justify-between group shadow-lg overflow-hidden';
         card.innerHTML = `
           <div>
             <div class="flex items-center justify-between mb-4">
@@ -3590,6 +3724,19 @@
           </div>
         `;
         grid.appendChild(card);
+        // Cinematic 3D cascade entrance
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(34px) scale(0.96)';
+          card.style.transition = `opacity 0.65s cubic-bezier(0.16,1,0.3,1) ${cardIdx * 0.07}s, transform 0.65s cubic-bezier(0.16,1,0.3,1) ${cardIdx * 0.07}s`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0) scale(1)';
+              setTimeout(() => { card.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1), border-color 0.3s ease, box-shadow 0.45s ease'; }, 900 + cardIdx * 70);
+            });
+          });
+        }
       });
 
       if (window.lucide && window.lucide.createIcons) {
@@ -4108,6 +4255,181 @@
 
     console.log('%c⚡ KALKI VAULT — ALL ANIMATION SYSTEMS ARMED ⚡', 'color: #00f0ff; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px #00f0ff;');
     console.log('%c🔒 Security Level: QUANTUM-HARDENED | Nodes: 820 | Threat Vectors: 120+ | Model: Claude Fable 5.1', 'color: #10b981; font-size: 11px;');
+
+    // ═══════════════════════════════════════════════════════════════
+    // CINEMATIC UPGRADE ENGINE — boot-gated choreography & page motion
+    // ═══════════════════════════════════════════════════════════════
+
+    // 1. HERO TITLE — word-by-word cinematic rise (keeps glitch span intact)
+    (function initHeroTitle() {
+      const h1 = document.getElementById('hero-title');
+      if (!h1) return;
+      const splitWords = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const words = node.textContent.split(/(\s+)/);
+          const frag = document.createDocumentFragment();
+          words.forEach(w => {
+            if (!w.trim()) { frag.appendChild(document.createTextNode(w)); return; }
+            const span = document.createElement('span');
+            span.className = 'hero-word';
+            span.textContent = w;
+            frag.appendChild(span);
+          });
+          node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('glitch-text')) {
+          Array.from(node.childNodes).forEach(splitWords);
+        } else if (node.classList && node.classList.contains('glitch-text')) {
+          const span = document.createElement('span');
+          span.className = 'hero-word';
+          node.parentNode.replaceChild(span, node);
+          span.appendChild(node);
+        }
+      };
+      Array.from(h1.childNodes).forEach(splitWords);
+      const words = h1.querySelectorAll('.hero-word');
+      words.forEach((w, i) => {
+        w.style.animationDelay = (0.08 + i * 0.09) + 's';
+      });
+      // Words rise the moment the boot overlay hands off to the site
+      const go = () => words.forEach(w => w.classList.add('kv-in'));
+      if (!document.documentElement.classList.contains('intro-armed')) {
+        go();
+      } else {
+        window.addEventListener('kalki:intro-go', go, { once: true });
+        setTimeout(go, 4000); // safety net
+      }
+    })();
+
+    // 2. SCROLL PROGRESS BAR + NAVBAR SHRINK
+    (function initScrollProgress() {
+      const bar = document.getElementById('scroll-progress');
+      const nav = document.getElementById('navbar');
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const h = document.documentElement;
+        const max = Math.max(1, h.scrollHeight - window.innerHeight);
+        const pr = Math.min(1, Math.max(0, (window.scrollY || h.scrollTop) / max));
+        if (bar) bar.style.transform = 'scaleX(' + pr + ')';
+        if (nav) nav.classList.toggle('nav-shrunk', window.scrollY > 24);
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }, { passive: true });
+      update();
+    })();
+
+    // 3. THREAT CARDS — 3D tilt + cursor-tracked spotlight + ripple entry
+    (function initThreatCardFX() {
+      const grid = document.getElementById('threat-cards-grid');
+      if (!grid) return;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      grid.addEventListener('pointermove', (e) => {
+        const card = e.target.closest('.threat-card-3d');
+        if (!card || reduced) return;
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--mx', (px * 100) + '%');
+        card.style.setProperty('--my', (py * 100) + '%');
+        card.style.transform = 'perspective(900px) rotateX(' + ((0.5 - py) * 7) + 'deg) rotateY(' + ((px - 0.5) * 9) + 'deg) translateY(-4px)';
+      });
+      grid.addEventListener('pointerleave', () => {
+        grid.querySelectorAll('.threat-card-3d').forEach(c => { c.style.transform = ''; });
+      });
+      grid.addEventListener('pointerout', (e) => {
+        const card = e.target.closest('.threat-card-3d');
+        if (card && !card.contains(e.relatedTarget)) card.style.transform = '';
+      });
+    })();
+
+    // 4. KILL CHAIN — stage panel pulse on every transition
+    (function initKillChainPulse() {
+      const orig = window.setKcStage;
+      if (typeof orig !== 'function') return;
+      window.setKcStage = function(idx) {
+        orig(idx);
+        const panel = document.querySelector('#kill-chain .rounded-3xl');
+        if (panel && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          panel.classList.remove('stage-pulse');
+          void panel.offsetWidth; // restart animation
+          panel.classList.add('stage-pulse');
+        }
+      };
+    })();
+
+    // 5. ASTRA & VESPER-GRADE CRYPTOGRAPHIC DECRYPTION ENGINE
+    (function initDecryptionScramble() {
+      const glyphs = '01010101XYZ0123456789ABCDEFØ§¥∑∆µ∂Ω⚡';
+      const scrambleEl = (el) => {
+        if (el.dataset.scrambled === 'true') return;
+        el.dataset.scrambled = 'true';
+        const originalText = el.textContent || '';
+        if (!originalText.trim()) return;
+        let iteration = 0;
+        const totalIterations = originalText.length * 3;
+        el.classList.add('scramble-active');
+
+        const interval = setInterval(() => {
+          el.textContent = originalText
+            .split('')
+            .map((char, index) => {
+              if (char === ' ' || char === '\n') return char;
+              if (index < iteration / 3) {
+                return originalText[index];
+              }
+              return glyphs[Math.floor(Math.random() * glyphs.length)];
+            })
+            .join('');
+
+          iteration++;
+          if (iteration >= totalIterations) {
+            clearInterval(interval);
+            el.textContent = originalText;
+            el.classList.remove('scramble-active');
+          }
+        }, 28);
+      };
+
+      // Observe section headings
+      const headings = document.querySelectorAll('h2, h3, .section-heading, [data-decrypt]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            scrambleEl(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.25 });
+
+      headings.forEach(h => observer.observe(h));
+    })();
+
+    // 6. GLOBAL PHOSPHOR SPOTLIGHT & TACTILE AUDIO FEEDBACK
+    (function initGlobalPhosphorAndAudio() {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('pointermove', (e) => {
+        const card = e.target.closest('.tilt-card, .phosphor-card, .rounded-3xl, .rounded-2xl');
+        if (!card || reduced) return;
+        const r = card.getBoundingClientRect();
+        const px = ((e.clientX - r.left) / r.width) * 100;
+        const py = ((e.clientY - r.top) / r.height) * 100;
+        card.style.setProperty('--mouse-x', px + '%');
+        card.style.setProperty('--mouse-y', py + '%');
+        card.style.setProperty('--mx', px + '%');
+        card.style.setProperty('--my', py + '%');
+      });
+
+      // Tactile button sound
+      document.querySelectorAll('button, a.magnetic-btn, .clickable-chip').forEach(btn => {
+        btn.addEventListener('pointerenter', () => {
+          window.cinematicDirector?.audioDirector?.playQuantumClick(2200);
+        });
+        btn.addEventListener('click', () => {
+          window.cinematicDirector?.audioDirector?.playQuantumClick(3200);
+        });
+      });
+    })();
 
   </script>
   <script type="module" src="/src/cinematic/mountCinematic.ts"></script>
