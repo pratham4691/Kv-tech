@@ -1,4 +1,4 @@
-import { Analytics } from '@vercel/analytics/next'
+﻿import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
@@ -26,41 +26,39 @@ const siteUrl = 'https://kalkivault.example'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Kalki Vault — Cybersecurity Awareness, Research & Innovation',
+    default: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
     template: '%s — Kalki Vault',
   },
   description:
-    'Kalki Vault is building a cybersecurity ecosystem focused on awareness, security research, education and future cybersecurity innovation.',
+    'Kalki Vault constructs zero-exposure cryptographic enclaves and autonomous incident severance systems for the post-quantum horizon.',
   keywords: [
     'cybersecurity',
-    'security awareness',
-    'security research',
-    'threat intelligence',
+    'zero trust',
+    'post-quantum cryptography',
+    'autonomous defense',
     'Kalki Vault',
-    'KV Technologies',
   ],
   authors: [{ name: 'Kalki Vault' }],
   openGraph: {
     type: 'website',
     url: siteUrl,
-    title: 'Kalki Vault — Cybersecurity Awareness, Research & Innovation',
+    title: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
     description:
-      'Explore the threats shaping the digital world, understand how attacks happen, and build the knowledge required to stay ahead.',
+      'Zero-exposure cryptographic enclaves and autonomous incident severance systems.',
     siteName: 'Kalki Vault',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kalki Vault — Cybersecurity Awareness, Research & Innovation',
+    title: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
     description:
-      'A cybersecurity ecosystem focused on awareness, research, education and innovation.',
+      'Zero-exposure cryptographic enclaves and autonomous incident severance systems.',
   },
   robots: { index: true, follow: true },
-  generator: 'v0.app',
 }
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#0b0e14',
+  themeColor: '#030508',
   width: 'device-width',
   initialScale: 1,
 }
@@ -73,9 +71,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-background`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-[#030508]`}
     >
-      <body className="antialiased">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased bg-[#030508]">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
