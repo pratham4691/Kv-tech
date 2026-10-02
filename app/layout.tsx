@@ -1,6 +1,7 @@
 ﻿import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { SmoothScrollProvider } from '@/components/smooth-scroll-provider'
 import './globals.css'
 
 const inter = Inter({
@@ -26,8 +27,8 @@ const siteUrl = 'https://kalkivault.example'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
-    template: '%s — Kalki Vault',
+    default: 'Kalki Vault - Autonomous Defensive Intelligence & Cryptographic Architecture',
+    template: '%s - Kalki Vault',
   },
   description:
     'Kalki Vault constructs zero-exposure cryptographic enclaves and autonomous incident severance systems for the post-quantum horizon.',
@@ -42,14 +43,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: siteUrl,
-    title: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
+    title: 'Kalki Vault - Autonomous Defensive Intelligence & Cryptographic Architecture',
     description:
       'Zero-exposure cryptographic enclaves and autonomous incident severance systems.',
     siteName: 'Kalki Vault',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kalki Vault — Autonomous Defensive Intelligence & Cryptographic Architecture',
+    title: 'Kalki Vault - Autonomous Defensive Intelligence & Cryptographic Architecture',
     description:
       'Zero-exposure cryptographic enclaves and autonomous incident severance systems.',
   },
@@ -82,7 +83,9 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-[#030508]">
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

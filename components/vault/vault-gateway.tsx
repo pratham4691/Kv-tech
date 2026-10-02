@@ -1,7 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   GraduationCap,
@@ -39,6 +40,7 @@ const accentRing: Record<VaultPath['accent'], string> = {
 type Stage = 'select' | 'credentials' | 'status'
 
 export function VaultGateway() {
+  const router = useRouter()
   const [stage, setStage] = useState<Stage>('select')
   const [selected, setSelected] = useState<VaultPathId | null>(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -54,9 +56,9 @@ export function VaultGateway() {
     e.preventDefault()
     if (!selected) return
     // Feature flags govern availability. Every path is disabled today, so we
-    // never claim authentication succeeded — we surface an honest status.
+    // never claim authentication succeeded â€” we surface an honest status.
     if (isVaultPathEnabled(selected)) {
-      // Future: route to the activated dashboard.
+      router.push('/vault/' + selected)
       return
     }
     setStage('status')
@@ -226,7 +228,7 @@ export function VaultGateway() {
                         autoComplete="current-password"
                         required
                         className="w-full rounded-xl border border-input bg-background/60 px-4 py-2.5 pr-11 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:ring-2 focus:ring-ring"
-                        placeholder="••••••••"
+                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                       />
                       <button
                         type="button"
@@ -326,3 +328,5 @@ export function VaultGateway() {
     </main>
   )
 }
+
+
